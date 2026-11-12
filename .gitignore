@@ -1,0 +1,28 @@
+# building
+/*.egg-info/
+/.eggs/
+/.pybuild/
+/build/
+/dist/
+
+# 'git format-patch' folder
+/outgoing/
+
+# python-specific
+__pycache__/
+*.py[cod]
+*$py.class
+
+# testing
+/htmlcov*/
+/.tox/
+.coverage*
+.venv
+!.coveragerc
+
+# utility output
+.cds2md-cache*/
+output*/
+
+# other
+/.idea/
