@@ -1,0 +1,47 @@
+[build-system]
+requires = [
+    'flit_core >=3.11,<4',
+]
+build-backend = 'flit_core.buildapi'
+
+[project]
+name = 'cds2md'
+description = 'Confluence Data Center to Markdown Utility'
+authors = [
+    {name = 'James Knight'},
+    {email = 'git@jdknight.me'},
+]
+maintainers = [
+    {name = 'James Knight', email = 'git@jdknight.me'},
+]
+requires-python = '>=3.11'
+readme = 'README.md'
+license = 'BSD-2-Clause'
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Environment :: Console',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    'Programming Language :: Python :: 3.15',
+    'Topic :: Documentation',
+]
+dependencies = [
+    'beautifulsoup4',
+    'httpx',
+    'python-slugify',
+]
+dynamic = [
+    'version',
+]
+
+[project.scripts]
+cds2md = 'cds2md.__main__:main'
+
+[project.urls]
+Homepage = 'https://github.com/jdknight/cds2md'
+Download = 'https://pypi.python.org/pypi/cds2md'
+Source = 'https://github.com/jdknight/cds2md'
