@@ -1,0 +1,58 @@
+# Contributing
+
+Users can contribute to this project by reporting issues or submitting changes.
+Please follow the guidelines below to help assist maintainers for this project.
+
+## Reporting issues
+
+Bugs and enhancements for this project can be submitted to this project's issue
+tracker. Before submitting an issue, consider the following:
+
+- Check if the same or related issue exists. If an existing issue exists, feel
+  free to add additional information to enhance the issue's content.
+- Including versions helps (such as this project's version, Python's version,
+  etc.).
+- If reporting an issue with an unexpected conversion or an unsupported feature
+  (e.g. an unsupported Confluence macro that should be supported), please
+  include a minimum working example of the storage format.
+
+## Submitting changes
+
+Contributions can be provided in the form of Git-formatted patches by Email or
+submitted through this project's pull request system. Before submitting changes,
+consider the following:
+
+- Always test any changes provided.
+- Commit messages for patches requires a summary, a body (describing why the
+  change is being made along with any other additional information) and
+  metadata. It is a requirement that any submitted changes are signed off
+  in accordance with the Developer Certificate of Origin (DCO). This is
+  indicated with the inclusion of the `Signed-off-by` tag in the metadata.
+  Commit messages with only "bug fix" or "addressing comments in review"
+  are not helpful when reflecting on the history of changes for this project.
+- A patch should attempt to have a narrow scope as well as be complete.
+- Be aware that while maintainers will help introduce changes into this project,
+  the process may take some time. Please be patient.
+
+## Quirks
+
+The following outlines a series of quirks when contributing:
+
+- Commit history is important. If a pull request is submitted, any commit should
+  have meaningful message which describes the purpose of the change. There may
+  be times where a maintainer or other contributors may request changes to a
+  pull request. Individuals working on a pull request may either reset/re-form
+  their commits or stack changes on the branch. If a developer wishes to stack
+  changes onto a pull request, it is important that the newly added commit
+  messages are describing the stacked change(s) as well. Adding a new commit
+  with a message "updated from review" is not useful when observing history
+  outside of the pull request.
+- The recommended maximum line length is 80 characters for this project over
+  PEP 8's recommendation of 79 characters. This preference is not enforced by
+  the tox configuration as there may be valid reasons for some implementation to
+  exceed 80 characters in length. That being said, please aim for any changes
+  introduced to not exceed the 80 character limit when possible.
+
+## Outro
+
+Thanks for considering to be a participant to this project.
