@@ -98,4 +98,6 @@ Confluence is a registered trademark of Atlassian Pty Ltd.
 
 
 [eol]: https://www.atlassian.com/licensing/data-center-end-of-life
+[pip]: https://pip.pypa.io/
+[pipx]: https://pipx.pypa.io/
 [python]: https://www.python.org/
