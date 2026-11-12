@@ -1,0 +1,5 @@
+<ac:image>
+    <ri:attachment ri:filename="misc.png">
+        <ri:page ri:content-title="other-page" />
+    </ri:attachment>
+</ac:image>

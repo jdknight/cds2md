@@ -1,0 +1,10 @@
+<table>
+    <thead>
+        <tr><th>a</th><th>b</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>1</td><td rowspan="2">2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td colspan="2">4</td></tr>
+    </tbody>
+</table>

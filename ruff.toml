@@ -1,0 +1,45 @@
+lint.select = [
+    'ALL',
+]
+
+lint.ignore = [
+    # ignore complexity hints
+    'C90',
+    'PLR',
+    # ignore pydocstyle
+    'D',
+    # imports are sorted lexicographically in this project
+    'FBT002',
+    'I001',
+    # project uses unittest module
+    'PT',
+    # single quotes are preferred in this project
+    'Q000',
+    'Q001',
+    'Q002',
+    # we utilize asserts to help inform type checks of known values
+    'S101',
+    # ignore simplifications which would cause long lines
+    'SIM102',
+    'SIM117',
+]
+
+[lint.flake8-copyright]
+notice-rgx = '# SPDX-License-Identifier: BSD-2-Clause\r?\n# Copyright ?.+'
+min-file-size = 1
+
+[lint.per-file-ignores]
+'cds2md/__main__.py' = [
+    # expected prints
+    'T201',
+]
+
+'cds2md/translator.py' = [
+    # ignore various linting warnings for visit/depart pattern
+    'ARG002',
+]
+
+'tests/test_opts.py' = [
+    # ignore test tokens
+    'S105',
+]

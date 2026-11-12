@@ -1,0 +1,5 @@
+<ac:link>
+    <ri:attachment ri:filename="example.svg">
+        <ri:page ri:content-title="another-page" />
+    </ri:attachment>
+</ac:link>

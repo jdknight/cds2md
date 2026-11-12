@@ -1,0 +1,3 @@
+<ac:image ac:alt="my-alt-text">
+    <ri:url ri:value="https://example.com/image.png" />
+</ac:image>

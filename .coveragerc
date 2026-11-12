@@ -1,0 +1,12 @@
+[coverage:run]
+data_file = ${CUSTOM_COVERAGE_DB-.coverage}
+parallel = 1
+
+[coverage:report]
+ignore_errors = 1
+omit =
+    # ignore tox
+    .tox/*
+    # ignore unit tests
+    tests/*
+show_missing = 1
