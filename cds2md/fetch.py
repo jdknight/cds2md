@@ -237,6 +237,9 @@ confluence-space-key: {opts.confluence_space_key}
         user_name = fetch_user(state, user_key)
         cache_db_state['users'][user_key] = user_name
 
+    # flag end of event
+    cache_db_state['cds2md-timestamp'] = datetime.now(UTC).isoformat()
+
     # fetch process complete -- write to new database state
     with cache_db.open('w') as f:
         json.dump(cache_db_state, f, indent=4)
