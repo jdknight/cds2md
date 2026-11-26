@@ -848,6 +848,18 @@ class Translator:
     def visit_ri_page(self, node: Tag) -> None:
         raise SkipNode
 
+    def visit_s(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('<s>')
+        else:
+            self._append('~~')
+
+    def depart_s(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('</s>')
+        else:
+            self._append('~~')
+
     def visit_span(self, node: Tag) -> None:
         span_class = cast('str', node.get('class', ''))
 
