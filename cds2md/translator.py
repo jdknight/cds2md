@@ -104,10 +104,15 @@ class Translator:
                 width=wrap,
             )
 
-            # restore leading/trailing whitespace for inlined content; but
+            # restore leading whitespace for inlined content; but
             # skip if we are in a context that wants to skip it
             if self.preserve_whitespace:
-                node_text = f'{lead}{node_text}{tail}'
+                node_text = f'{lead}{node_text}'
+
+            # always restore trailing whitespace to ensure there is spacing
+            # between this content and any inlined content that may follow;
+            # we can cleaning any trailing left over spaces in `_newline()`
+            node_text += tail
 
         # check if we should indent this text content
         indent = ' ' * self.indent_offset[-1]
@@ -1173,6 +1178,11 @@ class Translator:
         return ref.as_posix()
 
     def _newline(self, count: int = 1) -> None:
+        # if starting a newline, ensure our last block does not have any
+        # trailing spaces in it
+        if self.output:
+            self.output[-1] = self.output[-1].rstrip(' ')
+
         for _ in range(count):
             self._append('\n')
 
