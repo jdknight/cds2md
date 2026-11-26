@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 from urllib.parse import quote
+from urllib.parse import unquote
 import os
 import re
 import textwrap
@@ -454,6 +455,24 @@ class Translator:
                     else:
                         self._append(f'```jql\n{jq}\n```\n\n')
 
+                raise SkipNode
+
+            case 'math' | 'mathinline':
+                raw_text = ''
+
+                body_node = node.find('ac:parameter', {'ac:name': 'body'})
+                if body_node:
+                    raw_text = body_node.text.strip()
+
+                if not body_node:
+                    ptb_node = node.find('ac:plain-text-body', recursive=False)
+                    if ptb_node:
+                        raw_text = ptb_node.text.strip()
+
+                if raw_text.startswith('--uriencoded--'):
+                    raw_text = unquote(raw_text.removeprefix('--uriencoded--'))
+
+                self._append(f'${raw_text.strip()}$')
                 raise SkipNode
 
             case 'noformat':
