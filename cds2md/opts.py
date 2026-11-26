@@ -106,7 +106,7 @@ cds2md
     )
     parser.add_argument(
         '--confluence-url',
-        type=parse_confluence_url,
+        type=parse_url,
         default=os.environ.get('CDS2MD_CONFLUENCE_URL'),
         help='url of the Confluence data center instance to interact with',
     )
@@ -244,41 +244,6 @@ cds2md
             logger.warning('confluence api url does not end with /rest/api')
 
     return opts
-
-
-def parse_confluence_url(value: str) -> str:
-    """
-    parse a raw confluence url
-
-    Validate a user-provided Confluence URL.
-
-    Args:
-        value: the raw value
-
-    Returns:
-        the confluence url
-
-    Raises:
-        ArgumentTypeError if a parsing error occurs
-    """
-
-    confluence_url = value.strip('/')
-
-    try:
-        parsed_server_name = urlparse(confluence_url)
-    except ValueError as exc:
-        msg = 'confluence url is not a valid value'
-        raise ArgumentTypeError(msg) from exc
-
-    if parsed_server_name.scheme not in ('http', 'https'):
-        msg = 'confluence url must start with http(s)://'
-        raise ArgumentTypeError(msg)
-
-    if not parsed_server_name.hostname:
-        msg = 'confluence url missing a valid hostname'
-        raise ArgumentTypeError(msg)
-
-    return confluence_url
 
 
 def parse_file_check(value: str) -> Path:
@@ -425,3 +390,38 @@ def parse_positive_int(value: str) -> int:
             raise ArgumentTypeError(msg)
 
     return result
+
+
+def parse_url(value: str) -> str:
+    """
+    parse a raw url
+
+    Validate a user-provided URL.
+
+    Args:
+        value: the raw value
+
+    Returns:
+        the url
+
+    Raises:
+        ArgumentTypeError if a parsing error occurs
+    """
+
+    url = value.strip('/')
+
+    try:
+        parsed_server_name = urlparse(url)
+    except ValueError as exc:
+        msg = 'url is not a valid value'
+        raise ArgumentTypeError(msg) from exc
+
+    if parsed_server_name.scheme not in ('http', 'https'):
+        msg = 'url must start with http(s)://'
+        raise ArgumentTypeError(msg)
+
+    if not parsed_server_name.hostname:
+        msg = 'url missing a valid hostname'
+        raise ArgumentTypeError(msg)
+
+    return url
