@@ -111,6 +111,11 @@ cds2md
         help='url of the Confluence data center instance to interact with',
     )
     parser.add_argument(
+        '--cql-mode',
+        action='store_true',
+        help='search for pages with cql api over content api',
+    )
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='enabling debugging logs',

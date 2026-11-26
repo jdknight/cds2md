@@ -506,14 +506,25 @@ def fetch_space_pages(state: FetchState) -> list[PageMetaCache]:
 
     pages: list[PageMetaCache] = []
 
-    search_fields = {
-        'cql': f'space={state.opts.confluence_space_key}+and+type=page',
-        'expand': 'ancestors,version',
-        'limit': f'{BULK_LIMIT}',
-    }
+    if state.opts.cql_mode:
+        search_fields = {
+            'cql': f'space={state.opts.confluence_space_key}+and+type=page',
+            'expand': 'ancestors,version',
+            'limit': f'{BULK_LIMIT}',
+        }
+
+        fetch_api = f'{state.opts.confluence_url}/content/search'
+    else:
+        search_fields = {
+            'expand': 'ancestors,version',
+            'limit': f'{BULK_LIMIT}',
+            'spaceKey': state.opts.confluence_space_key,
+            'type': 'page',
+        }
+
+        fetch_api = f'{state.opts.confluence_url}/content'
 
     # query for this page's descendants
-    fetch_api = f'{state.opts.confluence_url}/content/search'
     rsp = state.http_client.get(fetch_api, params=search_fields)
 
     rsp.raise_for_status()
