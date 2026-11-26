@@ -417,7 +417,12 @@ class Translator:
                         self._newline(count=2)
 
             case 'html':
-                self._append(f'{node}')
+                html_data = ''
+                html_data_node = node.find('ac:plain-text-body')
+                if html_data_node:
+                    html_data = html_data_node.text
+
+                self._append(f'{html_data}\n\n')
                 raise SkipNode
 
             case 'jira':
