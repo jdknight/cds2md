@@ -441,6 +441,7 @@ class Translator:
                 'toc',
                 'view-file',
             }:
+                self._strip_trailing_whitespaces()
                 logger.debug(f'ignored unsupported macro {macro_type}')
                 raise SkipNode
 
