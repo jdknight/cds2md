@@ -576,6 +576,10 @@ class Translator:
                     self.output.pop()
                     self._newline()
 
+    # legacy macro calls
+    visit_ac_macro = visit_ac_structured_macro
+    depart_ac_macro = depart_ac_structured_macro
+
     def visit_ac_task(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('<li>')
