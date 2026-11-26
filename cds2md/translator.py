@@ -828,6 +828,15 @@ class Translator:
         self._newline(count=2)
         raise SkipNode
 
+    def visit_img(self, node: Tag) -> None:
+        if self._is_html_mode() or self.opts.tweak_html_images:
+            self._append(f'{node}')
+        else:
+            src = node.get('src', '')
+            self._append(f'![]({src})')
+
+        raise SkipNode
+
     def visit_ol(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('<ol>')
