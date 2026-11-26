@@ -426,8 +426,19 @@ class Translator:
 
             # unsupported macros (content skip)
             case str() if macro_type in {
+                'calendar',
                 'children',
+                'contributors',
+                'create-from-template',
+                'create-space-button',
+                'gallery',
+                'livesearch',
+                'pagetree',
+                'recently-updated',
+                'recently-updated-dashboard',
                 'roadmap',
+                'tasks-report-macro',
+                'toc',
                 'view-file',
             }:
                 logger.debug(f'ignored unsupported macro {macro_type}')
