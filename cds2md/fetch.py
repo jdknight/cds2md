@@ -132,7 +132,7 @@ confluence-space-key: {opts.confluence_space_key}
     existing_user_cache = {}
     if cache_db.is_file():
         with cache_db.open() as f:
-            existing_user_cache = json.load(f)['users']
+            existing_user_cache = json.load(f).get('users', {})
 
     # clear the previous data before we write content until we have acquired
     # all new data
