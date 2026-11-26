@@ -10,6 +10,7 @@ from cds2md.logger import logger
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
+from urllib.parse import quote
 import os
 import re
 import textwrap
@@ -411,6 +412,32 @@ class Translator:
                     if admonition_title:
                         self._append(f'**{admonition_title}**')
                         self._newline(count=2)
+
+            case 'jira':
+                jira_url = self.opts.jira_url
+
+                key_node = node.find('ac:parameter', {'ac:name': 'key'})
+                if key_node:
+                    jira_key = key_node.text
+
+                    if jira_url:
+                        self._append(f'[{jira_key}]({jira_url}'
+                                     f'/browse/{jira_key})')
+                    else:
+                        self._append(f'{jira_key}')
+
+                jq_node = node.find('ac:parameter', {'ac:name': 'jqlQuery'})
+                if jq_node:
+                    jq = jq_node.text
+
+                    if jira_url:
+                        quoted_jq = quote(jq)
+                        self._append(f'[Jira Query]({jira_url}'
+                                     f'/issues?{quoted_jq})')
+                    else:
+                        self._append(f'```jql\n{jq}\n```\n\n')
+
+                raise SkipNode
 
             case 'noformat':
                 noformat_data = ''

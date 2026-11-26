@@ -148,6 +148,12 @@ cds2md
         help='ignore all TLS checks when communicating with Confluence',
     )
     parser.add_argument(
+        '--jira-url',
+        type=parse_url,
+        default=os.environ.get('CDS2MD_JIRA_URL'),
+        help='base url to use for any jira links',
+    )
+    parser.add_argument(
         '--output',
         type=parse_non_file_path,
         default=Path('output'),
