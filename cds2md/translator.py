@@ -326,6 +326,9 @@ class Translator:
 
                 raise SkipNode
 
+            case 'chart':
+                pass
+
             case 'code':
                 code_language = ''
                 lang_node = node.find('ac:parameter', {'ac:name': 'language'})
