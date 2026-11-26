@@ -2,6 +2,7 @@
 # Copyright jdknight
 
 from argparse import Namespace
+from bs4 import BeautifulSoup
 from cds2md import __version__ as cds2md_version
 from cds2md.cache import AttachmentMetaCache
 from cds2md.cache import PageMetaCache
@@ -10,6 +11,7 @@ from cds2md.defs import CACHE_DB
 from cds2md.logger import logger
 from collections.abc import Callable
 from dataclasses import dataclass
+from dataclasses import field
 from datetime import UTC
 from datetime import datetime
 from email.utils import mktime_tz
@@ -21,6 +23,7 @@ from typing import Concatenate
 from typing import ParamSpec
 from typing import TypeAlias
 from typing import TypeVar
+from typing import cast
 from urllib.parse import parse_qsl
 from urllib.parse import urlparse
 import httpx
@@ -65,6 +68,7 @@ TRANSIENT_ERRORS = (
 class FetchState:
     http_client: httpx.Client
     opts: Namespace
+    detected_user_keys: set[str] = field(default_factory=set)
     rate_limit_last: float = 1
     rate_limit_next: int | None = None
 
@@ -120,14 +124,24 @@ confluence-space-key: {opts.confluence_space_key}
     except FileExistsError:
         pass
 
-    # about to process a newly entire cache state -- clear the previous
-    # data before we write content until we have acquired all new data
+    # about to process a newly entire cache state
     cache_db = cache_dir / CACHE_DB
+
+    # keep track of any user identifier caches; as we may only pull updated
+    # user keys in this pass
+    existing_user_cache = {}
+    if cache_db.is_file():
+        with cache_db.open() as f:
+            existing_user_cache = json.load(f)['users']
+
+    # clear the previous data before we write content until we have acquired
+    # all new data
     cache_db.unlink(missing_ok=True)
 
     cache_db_state: dict[str, Any] = {
         'cds2md-version': cds2md_version,
         'pages': {},
+        'users': existing_user_cache,
     }
 
     # for each found page, fetch its contents into the cache
@@ -217,6 +231,11 @@ confluence-space-key: {opts.confluence_space_key}
             'id': attachment.id,
             'version': attachment.version,
         }
+
+    # fetch names for any references user
+    for user_key in state.detected_user_keys:
+        user_name = fetch_user(state, user_key)
+        cache_db_state['users'][user_key] = user_name
 
     # fetch process complete -- write to new database state
     with cache_db.open('w') as f:
@@ -610,4 +629,50 @@ def fetch_page(state: FetchState, page: PageMetaCache) -> tuple[str, str]:
 
     logger.debug(f'fetched page ({page.id}; v{page.version}): {page_title}')
 
+    # parse the page's body
+    logger.debug('pre-parse body of page')
+    soup = BeautifulSoup(page_body, 'html.parser')
+
+    # extract any user keys so we can later map keys to names
+    for user_entry in soup.find_all('ri:user'):
+        user_key = cast('str', user_entry.get('ri:userkey'))
+        if user_key:
+            state.detected_user_keys.add(user_key)
+
     return page_title, page_body
+
+
+@confluence_error_retries()
+@rate_limited_retries()
+def fetch_user(state: FetchState, key: str) -> str | None:
+    """
+    fetch user data from the confluence instance
+
+    This call is used to fetch user data from a Confluence instance, if the
+    user exists.
+
+    Args:
+        state: the fetch state
+        key: the user key to fetch
+
+    Returns:
+        the name of the user or None if not found
+    """
+
+    logger.debug(f'about to fetch user key: {key}')
+
+    fetch_api = f'{state.opts.confluence_url}/user'
+    rsp = state.http_client.get(fetch_api, params={
+        'key': key,
+    })
+
+    rsp.raise_for_status()
+    data = rsp.json()
+
+    name = data.get('displayName')
+    if not name:
+        name = data.get('username', 'UnknownUser')
+
+    logger.debug(f'fetched user ({key}): {name}')
+
+    return name

@@ -20,6 +20,7 @@ class TranslatorContext:
     attachment2target: dict
     opts: Namespace
     title2target: dict
+    userid2name: dict
 
 
 class Translator:
@@ -42,6 +43,7 @@ class Translator:
         self.preserve_whitespace = True
         self.title = title
         self.title2target = ctx.title2target
+        self.userid2name = ctx.userid2name
 
     def walk(self, node: PageElement) -> None:
         if isinstance(node, Tag):
@@ -204,6 +206,19 @@ class Translator:
         pass
 
     def visit_ac_link(self, node: Tag) -> None:
+        user_tag = node.find('ri:user', recursive=False)
+        if user_tag:
+            user_key = user_tag.get('ri:userkey')
+            if not user_key:
+                logger.warning(f'missing user key on ri:user link: {node}')
+            elif user_key not in self.userid2name:
+                logger.warning(f'missing name map for user key: {user_key}')
+            else:
+                display_name = self.userid2name.get(user_key)
+                self._append(f'@{display_name}')
+
+            raise SkipNode
+
         if self._is_html_mode():
             href = self._resolve_ac_link_href(node)
             self._append(f'<a href="{href}">')

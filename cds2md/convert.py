@@ -45,9 +45,13 @@ def convert(opts: Namespace) -> bool:
     # extract cached fetch data to be processed
     pages_cache = []
     pageid2cache = {}
+    userid2name = {}
 
     with cache_db.open() as f:
-        pages = json.load(f)['pages']
+        cache_data = json.load(f)
+
+        userid2name = cache_data.get('users', {})
+        pages = cache_data['pages']
 
         for page_id_str, page_data in pages.items():
             page_atachments = page_data['attachments']
@@ -154,6 +158,7 @@ def convert(opts: Namespace) -> bool:
         attachment2target=attachment2target,
         opts=opts,
         title2target=title2target,
+        userid2name=userid2name,
     )
 
     for page_cache in pages_cache:

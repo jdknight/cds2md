@@ -132,6 +132,7 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
             attachment2target: dict | None = None,
             opts: Namespace | None = None,
             title2target: dict | None = None,
+            userid2name: dict | None = None,
             ctx: TranslatorContext | None = None) -> str:
         soup = BeautifulSoup(data, 'html.parser')
 
@@ -145,6 +146,7 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
                 title2target=title2target or {
                     'unit-test': 'unit-test',
                 },
+                userid2name=userid2name or {},
             )
 
         translator = Translator(ctx, 'unit-test')
