@@ -819,6 +819,23 @@ class Translator:
             if column_count:
                 self._append('| - ' * column_count + '|\n')
 
+    def visit_time(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append(f'{node}')
+        else:
+            time_display = node.text.strip()
+
+            suffix = node.get('datetime', '')
+            if time_display:
+                suffix = f' ({suffix})'
+
+            time_display += f'{suffix}'
+
+            if time_display:
+                self._append(time_display)
+
+        raise SkipNode
+
     def visit_tr(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('  <tr>')
