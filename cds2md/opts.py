@@ -133,6 +133,11 @@ cds2md
         help='http headers to include in requests',
     )
     parser.add_argument(
+        '--flat',
+        action='store_true',
+        help='ignore any Confluence-detected hierarchy structure',
+    )
+    parser.add_argument(
         '--ignore-cache',
         action='store_true',
         help='ignore any cached content',
@@ -141,11 +146,6 @@ cds2md
         '--ignore-tls',
         action='store_true',
         help='ignore all TLS checks when communicating with Confluence',
-    )
-    parser.add_argument(
-        '--flat',
-        action='store_true',
-        help='ignore any Confluence-detected hierarchy structure',
     )
     parser.add_argument(
         '--output',
