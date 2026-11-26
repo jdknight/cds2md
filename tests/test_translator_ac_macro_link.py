@@ -53,14 +53,14 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
         data = file.read_text()
 
         t2t = {
-            'other-page': 'container/another-container/other-page',
+            'Other page': 'container/another-container/other-page',
             'unit-test': 'container/unit-test',
         }
 
         body = self.translate(data, title2target=t2t)
 
         expected = cleandoc('''
-            [](another-container/other-page)
+            [Other page](another-container/other-page)
         ''')
 
         self.assertIn(expected, body)
@@ -70,14 +70,14 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
         data = file.read_text()
 
         t2t = {
-            'other-page': 'container/other-page',
+            'Other page': 'container/other-page',
             'unit-test': 'container/another-container/unit-test',
         }
 
         body = self.translate(data, title2target=t2t)
 
         expected = cleandoc('''
-            [](../other-page)
+            [Other page](../other-page)
         ''')
 
         self.assertIn(expected, body)
@@ -87,14 +87,31 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
         data = file.read_text()
 
         t2t = {
-            'other-page': 'container/other-page',
+            'Other page': 'container/other-page',
             'unit-test': 'container/unit-test',
         }
 
         body = self.translate(data, title2target=t2t)
 
         expected = cleandoc('''
-            [](other-page)
+            [Other page](other-page)
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_link_title(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_link_title.storage'
+        data = file.read_text()
+
+        t2t = {
+            'Other page': 'container/other-page',
+            'unit-test': 'container/unit-test',
+        }
+
+        body = self.translate(data, title2target=t2t)
+
+        expected = cleandoc('''
+            - This is a [custom name](other-page) link.
         ''')
 
         self.assertIn(expected, body)

@@ -1,0 +1,8 @@
+<ul>
+    <li>
+        This is a <ac:link>
+            <ri:page ri:content-title="Other page" />
+            <ac:plain-text-link-body><![CDATA[custom name]]></ac:plain-text-link-body>
+        </ac:link> link.
+    </li>
+</ul>

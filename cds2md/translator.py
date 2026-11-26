@@ -227,6 +227,16 @@ class Translator:
         else:
             self._append('[')
 
+        # if a page reference and no text description of a link, add the link
+        # name now based on the content title value
+        ptlb_node = node.find('ac:plain-text-link-body', recursive=False)
+        if not ptlb_node:
+            page_ref_node = node.find('ri:page', recursive=False)
+            if page_ref_node:
+                target_title = page_ref_node.get('ri:content-title')
+                if target_title:
+                    self._append(cast('str', target_title))
+
     def depart_ac_link(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('</a>')
