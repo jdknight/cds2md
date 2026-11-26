@@ -1,0 +1,6 @@
+<ac:structured-macro ac:name="plantuml" ac:schema-version="1">
+    <ac:plain-text-body><![CDATA[@startuml
+Alice -> Bob: Hello
+Bob --> Alice: Hi there!
+@enduml]]></ac:plain-text-body>
+</ac:structured-macro>

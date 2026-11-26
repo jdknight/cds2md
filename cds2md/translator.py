@@ -473,6 +473,20 @@ class Translator:
                     self._append(f'**{title_node.text}**')
                     self._newline(count=2)
 
+            case 'plantuml':
+                title_node = node.find('ac:parameter', {'ac:name': 'title'})
+                if title_node:
+                    self._append(f'**{title_node.text}**')
+                    self._newline(count=2)
+
+                plantuml_data = ''
+                plantuml_data_node = node.find('ac:plain-text-body')
+                if plantuml_data_node:
+                    plantuml_data = plantuml_data_node.text
+
+                self._append(f'```plantuml\n{plantuml_data}\n```\n\n')
+                raise SkipNode
+
             case 'status':
                 title_node = node.find('ac:parameter', {'ac:name': 'title'})
                 if title_node:
