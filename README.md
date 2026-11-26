@@ -73,13 +73,15 @@ options:
   --confluence-token-stdin
                         pass in the token via the standard input stream
   --confluence-url CONFLUENCE_URL
-                        url of the Confluence data center instance to interact
-                        with
+                        url of the Confluence data center instance to interact with
+  --cql-mode            search for pages with cql api over content api
   --debug               enabling debugging logs
   --development         configure to operate in a development state
   --header, -H HEADER   http headers to include in requests
-  --ignore-tls          ignore all TLS checks when communicating with Confluence
   --flat                ignore any Confluence-detected hierarchy structure
+  --ignore-cache        ignore any cached content
+  --ignore-tls          ignore all TLS checks when communicating with Confluence
+  --jira-url JIRA_URL   base url to use for any jira links
   --output OUTPUT       path to output markdown content into
   --timeout TIMEOUT     timeout for connection REST requests to Confluence
   --tweak-admonition-type {default,docusaurus,github,gitlab,myst,plain}
