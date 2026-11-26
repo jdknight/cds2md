@@ -1,4 +1,4 @@
-## Development
+## 2026-11-26
 
 - Adjust connection test URL to support pre-v9 Confluence instances
 - Default use the `content` API over CQL for reliability
