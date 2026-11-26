@@ -179,6 +179,12 @@ class Translator:
         else:
             self._append(f'![{alt}]({href})')
 
+    def visit_ac_inline_comment_marker(self, node: Tag) -> None:
+        pass
+
+    def depart_ac_inline_comment_marker(self, node: Tag) -> None:
+        pass
+
     def visit_ac_layout(self, node: Tag) -> None:
         pass
 
