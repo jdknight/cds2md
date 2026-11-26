@@ -466,7 +466,7 @@ class Translator:
                     if jira_url:
                         quoted_jq = quote(jq)
                         self._append(f'[Jira Query]({jira_url}'
-                                     f'/issues?{quoted_jq})')
+                                     f'/issues/?jql={quoted_jq})')
                     else:
                         self._append(f'```jql\n{jq}\n```\n\n')
 

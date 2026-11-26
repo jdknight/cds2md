@@ -31,7 +31,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
         body = self.translate(data, opts=opts)
 
         expected = cleandoc('''
-            [Jira Query](http://jira.example.com/issues?project%20%3D%20%22TEST%22)
+            [Jira Query](http://jira.example.com/issues/?jql=project%20%3D%20%22TEST%22)
         ''')
 
         self.assertIn(expected, body)
