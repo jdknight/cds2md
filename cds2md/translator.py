@@ -659,23 +659,17 @@ class Translator:
         if self._is_html_mode():
             self._append('<blockquote>')
         else:
-            # we will be capturing all output to bind into a single line
-            self.output_context.append(self.output)
-            self.output = ['']
-
             self.admonition_prefix_context.append(True)
 
     def depart_blockquote(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('</blockquote>')
         else:
-            # group all captured content and restore output capture
-            blockquote_contents = ' '.join(''.join(self.output).split())
-            self.output = self.output_context.pop()
-
-            self._append(f'{blockquote_contents}')
             self.admonition_prefix_context.pop()
-            self._newline(count=2)
+
+            if self.admonition_prefix_pending:
+                self.output.pop()
+                self._newline()
 
     def visit_code(self, node: Tag) -> None:
         if self._is_html_mode():

@@ -17,8 +17,10 @@ class TestTranslatorBlockquote(Cds2mdTranslatorTestCase):
             one
 
             > two
+            >
+            > three
 
-            three
+            four
         ''')
 
         self.assertIn(expected, body)
