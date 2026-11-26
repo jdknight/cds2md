@@ -59,8 +59,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
               <tr><td><pre>
             my
                 content
-            </pre>
-            </td></tr>
+            </pre></td></tr>
               <tr><td><strong>test</strong></td></tr>
               <tr><td><sub>test</sub></td></tr>
               <tr><td><sup>test</sup></td></tr>
@@ -115,8 +114,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
               <tr><td>4</td><td>5</td></tr>
               <tr><td>6</td><td>7</td></tr>
              </tbody>
-            </table>
-            </td></tr>
+            </table></td></tr>
              </tbody>
             </table>
         ''')

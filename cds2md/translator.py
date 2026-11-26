@@ -758,10 +758,7 @@ class Translator:
 
     def depart_td(self, node: Tag) -> None:
         if self._is_html_mode():
-            # strip any trailing whitespaces before closing
-            if not self.output[-1].strip():
-                self.output.pop()
-
+            self._strip_trailing_whitespaces()
             self._append('</td>')
         else:
             # group all captured content and restore output capture
@@ -787,10 +784,7 @@ class Translator:
 
     def depart_th(self, node: Tag) -> None:
         if self._is_html_mode():
-            # strip any trailing whitespaces before closing
-            if not self.output[-1].strip():
-                self.output.pop()
-
+            self._strip_trailing_whitespaces()
             self._append('</th>')
         else:
             # group all captured content and restore output capture
@@ -942,6 +936,10 @@ class Translator:
         else:
             self.admonition_prefix_pending = False
             self.output.append(value)
+
+    def _strip_trailing_whitespaces(self) -> None:
+        while not self.output[-1].strip():
+            self.output.pop()
 
 
 class SkipNode(Exception):  # noqa: N818
