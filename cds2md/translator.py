@@ -422,7 +422,7 @@ class Translator:
             case str() if macro_type in {  # noqa: FURB171
                 'expand',
             }:
-                logger.warning(f'ignored unsupported macro {macro_type}')
+                logger.debug(f'ignored unsupported macro {macro_type}')
 
             # unsupported macros (content skip)
             case str() if macro_type in {
@@ -430,7 +430,7 @@ class Translator:
                 'roadmap',
                 'view-file',
             }:
-                logger.warning(f'ignored unsupported macro {macro_type}')
+                logger.debug(f'ignored unsupported macro {macro_type}')
                 raise SkipNode
 
             case _:
