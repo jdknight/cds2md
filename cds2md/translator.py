@@ -330,6 +330,11 @@ class Translator:
                 pass
 
             case 'code':
+                title_node = node.find('ac:parameter', {'ac:name': 'title'})
+                if title_node:
+                    self._append(f'**{title_node.text}**')
+                    self._newline(count=2)
+
                 code_language = ''
                 lang_node = node.find('ac:parameter', {'ac:name': 'language'})
                 if lang_node:
