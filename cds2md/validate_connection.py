@@ -10,7 +10,7 @@ def validate_connection(opts: Namespace, client: httpx.Client) -> bool:
     confluence_up = False
 
     try:
-        query_api = f'{opts.confluence_url}/server-information'
+        query_api = f'{opts.confluence_url}/user/current'
         rsp = client.get(query_api)
         rsp.raise_for_status()
     except httpx.RequestError as exc:
