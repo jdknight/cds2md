@@ -397,6 +397,12 @@ class Translator:
                         self._append(f'**{admonition_title}**')
                         self._newline(count=2)
 
+            case 'status':
+                title_node = node.find('ac:parameter', {'ac:name': 'title'})
+                if title_node:
+                    self._append(f'**{title_node.text}**')
+                raise SkipNode
+
             # unsupported macros (no content skip)
             case str() if macro_type in {  # noqa: FURB171
                 'expand',
