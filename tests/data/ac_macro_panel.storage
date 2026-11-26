@@ -1,0 +1,6 @@
+<ac:structured-macro ac:name="panel">
+    <ac:parameter ac:name="title">title</ac:parameter>
+    <ac:rich-text-body>
+        <p class="auto-cursor-target">panel <strong>content</strong></p>
+    </ac:rich-text-body>
+</ac:structured-macro>
