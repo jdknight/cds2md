@@ -412,6 +412,27 @@ class Translator:
                         self._append(f'**{admonition_title}**')
                         self._newline(count=2)
 
+            case 'noformat':
+                noformat_data = ''
+                noformat_data_node = node.find(
+                    'ac:plain-text-body', recursive=False)
+                if noformat_data_node:
+                    noformat_data = noformat_data_node.text.strip()
+
+                if self._is_html_mode():
+                    self._append('<pre>')
+                else:
+                    self._append('```')
+                self._newline()
+                self._append(f'{noformat_data}')
+                self._newline()
+                if self._is_html_mode():
+                    self._append('</pre>')
+                else:
+                    self._append('```')
+                self._newline(count=2)
+                raise SkipNode
+
             case 'status':
                 title_node = node.find('ac:parameter', {'ac:name': 'title'})
                 if title_node:
