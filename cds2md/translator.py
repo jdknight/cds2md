@@ -85,6 +85,9 @@ class Translator:
 
         node_text = str(node)
 
+        # escape text content for markdown
+        node_text = re.sub(r'([\\`*_{}\[\]()!~|])', r'\\\1', node_text)
+
         # reduce the wrap if we are indenting any text contents
         wrap = max(self.opts.wrap - self.indent_offset[-1], 0)
 
