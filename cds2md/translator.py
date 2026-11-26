@@ -853,6 +853,16 @@ class Translator:
             if not next_tag or next_tag.name != 'th':
                 self._append('|\n')
 
+                # generate a line separating from the table's body after the
+                # last th instance; while this would typically be done under
+                # thead processing, some older Confluence versions may have
+                # generated tables with no thead tags and have a leading th
+                # in first row and td in others
+                assert node.parent
+                column_count = len(node.parent.find_all('th'))
+                if column_count:
+                    self._append('| - ' * column_count + '|\n')
+
     def visit_thead(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append(' <thead>')
@@ -862,11 +872,6 @@ class Translator:
         if self._is_html_mode():
             self._append(' </thead>')
             self._newline()
-        else:
-            # after a header, add the line separating from the table's body
-            column_count = len(node.find_all('th'))
-            if column_count:
-                self._append('| - ' * column_count + '|\n')
 
     def visit_time(self, node: Tag) -> None:
         if self._is_html_mode():
