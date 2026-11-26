@@ -472,6 +472,55 @@ class Translator:
                     self.output.pop()
                     self._newline()
 
+    def visit_ac_task(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('<li>')
+        else:
+            self._append('- ')
+
+    def depart_ac_task(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('</li>')
+        else:
+            self._newline()
+
+    def visit_ac_task_body(self, node: Tag) -> None:
+        # we will be capturing all output to bind into a single line
+        self.output_context.append(self.output)
+        self.output = ['']
+
+    def depart_ac_task_body(self, node: Tag) -> None:
+        # group all captured content and restore output capture
+        task_contents = ' '.join(''.join(self.output).split())
+        self.output = self.output_context.pop()
+
+        self._append(f'{task_contents}')
+
+    def visit_ac_task_id(self, node: Tag) -> None:
+        raise SkipNode
+
+    def visit_ac_task_list(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('<ul>')
+
+    def depart_ac_task_list(self, node: Tag) -> None:
+        if self._is_html_mode():
+            self._append('</ul>')
+
+    def visit_ac_task_status(self, node: Tag) -> None:
+        if node.text == 'complete':
+            self.output.append('[x] ')
+        else:
+            self.output.append('[ ] ')
+
+        raise SkipNode
+
+    def depart_ac_task_status(self, node: Tag) -> None:
+        pass
+
+    def visit_ac_task_uuid(self, node: Tag) -> None:
+        raise SkipNode
+
     def visit_br(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('<br>')
