@@ -416,6 +416,10 @@ class Translator:
                         self._append(f'**{admonition_title}**')
                         self._newline(count=2)
 
+            case 'html':
+                self._append(f'{node}')
+                raise SkipNode
+
             case 'jira':
                 jira_url = self.opts.jira_url
 
