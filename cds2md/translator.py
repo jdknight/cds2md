@@ -471,7 +471,7 @@ class Translator:
                 title_node = node.find('ac:parameter', {'ac:name': 'title'})
                 if title_node:
                     self._append(f'**{title_node.text}**')
-                self._newline(count=2)
+                    self._newline(count=2)
 
             case 'status':
                 title_node = node.find('ac:parameter', {'ac:name': 'title'})
