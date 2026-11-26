@@ -133,6 +133,11 @@ cds2md
         help='http headers to include in requests',
     )
     parser.add_argument(
+        '--ignore-cache',
+        action='store_true',
+        help='ignore any cached content',
+    )
+    parser.add_argument(
         '--ignore-tls',
         action='store_true',
         help='ignore all TLS checks when communicating with Confluence',

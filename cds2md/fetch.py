@@ -156,7 +156,7 @@ confluence-space-key: {opts.confluence_space_key}
 
         # skip if we have already cached this page
         status = ''
-        if page_cache_file.exists():
+        if page_cache_file.exists() and not opts.ignore_cache:
             status = ' (cache)'
         else:
             # query information about the page
