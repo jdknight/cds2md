@@ -532,9 +532,12 @@ class Translator:
             case str() if macro_type in {
                 'calendar',
                 'children',
+                'content-report-table',
                 'contributors',
                 'create-from-template',
                 'create-space-button',
+                'details',
+                'detailssummary',
                 'gallery',
                 'livesearch',
                 'pagetree',
