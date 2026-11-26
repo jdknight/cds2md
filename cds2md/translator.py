@@ -723,6 +723,12 @@ class Translator:
         if self._is_html_mode():
             self._append('<li>')
         else:
+            # if this new li entry did not last end with a newline (e.g. a
+            # nested sub-list), add one now
+            last_ends_with_nl = self.output[-1].endswith('\n')
+            if not last_ends_with_nl:
+                self._newline()
+
             indent = '-' if self.indent_context[-1] == 'ul' else '1.'
             offset = ' ' * self.indent_offset[-2]
             self._append(f'{offset}{indent} ')

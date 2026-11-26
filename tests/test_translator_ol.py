@@ -24,8 +24,9 @@ class TestTranslatorOl(Cds2mdTranslatorTestCase):
    vel porta magna. Sed vel nulla aliquet, fringilla erat quis, tincidunt neque.
    Sed pellentesque erat est, id dictum magna consequat sit amet. Ut sed lectus
    sem. Sed sollicitudin dignissim viverra.
-   1. three
+1. three
    1. four
+   1. five
    1. Fusce sed sem fringilla, luctus tortor vitae, facilisis neque. Quisque
       consectetur tincidunt diam, ut faucibus tellus hendrerit non. Fusce quis
       consectetur turpis. Mauris varius arcu quis pulvinar vulputate. Quisque id
