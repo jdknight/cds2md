@@ -68,6 +68,7 @@ TRANSIENT_ERRORS = (
 class FetchState:
     http_client: httpx.Client
     opts: Namespace
+    detected_jira_summaries: set[str] = field(default_factory=set)
     detected_user_keys: set[str] = field(default_factory=set)
     rate_limit_last: float = 1
     rate_limit_next: int | None = None
@@ -127,12 +128,14 @@ confluence-space-key: {opts.confluence_space_key}
     # about to process a newly entire cache state
     cache_db = cache_dir / CACHE_DB
 
-    # keep track of any user identifier caches; as we may only pull updated
-    # user keys in this pass
+    # keep track of any special caches (as this may only query updates pages)
+    existing_jira_cache = {}
     existing_user_cache = {}
     if cache_db.is_file():
         with cache_db.open() as f:
-            existing_user_cache = json.load(f).get('users', {})
+            raw_cache = json.load(f)
+            existing_jira_cache = raw_cache.get('jiras', {})
+            existing_user_cache = raw_cache.get('users', {})
 
     # clear the previous data before we write content until we have acquired
     # all new data
@@ -140,6 +143,7 @@ confluence-space-key: {opts.confluence_space_key}
 
     cache_db_state: dict[str, Any] = {
         'cds2md-version': cds2md_version,
+        'jiras': existing_jira_cache,
         'pages': {},
         'users': existing_user_cache,
     }
@@ -232,7 +236,13 @@ confluence-space-key: {opts.confluence_space_key}
             'version': attachment.version,
         }
 
-    # fetch names for any references user
+    # fetch summaries for any referenced jira entry
+    if not opts.ignore_jira_api_features:
+        for jira_key in state.detected_jira_summaries:
+            summary = fetch_jira_summary(state, jira_key)
+            cache_db_state['jiras'][jira_key] = summary
+
+    # fetch names for any referenced user
     for user_key in state.detected_user_keys:
         user_name = fetch_user(state, user_key)
         cache_db_state['users'][user_key] = user_name
@@ -647,6 +657,22 @@ def fetch_page(state: FetchState, page: PageMetaCache) -> tuple[str, str]:
     logger.debug('pre-parse body of page')
     soup = BeautifulSoup(page_body, 'html.parser')
 
+    # extract any jira keys we may need summaries for
+    for node in soup.find_all('ac:structured-macro', {'ac:name': 'jira'}):
+        key_node = node.find('ac:parameter', {'ac:name': 'key'})
+        if not key_node:
+            continue
+
+        jira_key = key_node.text
+
+        show_summary = True
+        summary_param = node.find('ac:parameter', {'ac:name': 'showSummary'})
+        if summary_param and summary_param.text.lower() == 'false':
+            show_summary = False
+
+        if show_summary:
+            state.detected_jira_summaries.add(jira_key)
+
     # extract any user keys so we can later map keys to names
     for user_entry in soup.find_all('ri:user'):
         user_key = cast('str', user_entry.get('ri:userkey'))
@@ -655,6 +681,46 @@ def fetch_page(state: FetchState, page: PageMetaCache) -> tuple[str, str]:
 
     return page_title, page_body
 
+
+@confluence_error_retries()
+@rate_limited_retries()
+def fetch_jira_summary(state: FetchState, key: str) -> str | None:
+    """
+    fetch a jira summary from the confluence instance
+
+    This call is used to fetch jira summary data from a Jira instance, if the
+    Jira exists.
+
+    Args:
+        state: the fetch state
+        key: the jira key to fetch
+
+    Returns:
+        the summary of the jira key or None if not found
+    """
+
+    logger.debug(f'about to fetch jira summary: {key}')
+
+    fetch_api = f'{state.opts.jira_url}/rest/api/2/issue/{key}'
+    rsp = state.http_client.get(fetch_api, params={
+        'fields': 'summary',
+    })
+
+    rsp.raise_for_status()
+    data = rsp.json()
+
+    summary = None
+
+    fields = data.get('fields')
+    if fields:
+        summary = fields.get('summary')
+
+    if summary:
+        logger.debug(f'fetched jira summary ({key}): {summary}')
+    else:
+        logger.debug(f'unable to fetch jira summary: {key}')
+
+    return summary
 
 @confluence_error_retries()
 @rate_limited_retries()

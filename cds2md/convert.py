@@ -43,6 +43,7 @@ def convert(env: Environment, opts: Namespace) -> bool:
         return False
 
     # extract cached fetch data to be processed
+    jira2summary = {}
     pages_cache = []
     pageid2cache = {}
     userid2name = {}
@@ -50,6 +51,7 @@ def convert(env: Environment, opts: Namespace) -> bool:
     with cache_db.open() as f:
         cache_data = json.load(f)
 
+        jira2summary = cache_data.get('jiras', {})
         userid2name = cache_data.get('users', {})
         pages = cache_data['pages']
 
@@ -180,6 +182,7 @@ def convert(env: Environment, opts: Namespace) -> bool:
     # process each page
     ctx = TranslatorContext(
         attachment2target=attachment2target,
+        jira2summary=jira2summary,
         opts=opts,
         title2target=title2target,
         userid2name=userid2name,

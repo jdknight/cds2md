@@ -21,6 +21,7 @@ import textwrap
 @dataclass
 class TranslatorContext:
     attachment2target: dict
+    jira2summary: dict
     opts: Namespace
     title2target: dict
     userid2name: dict
@@ -37,6 +38,7 @@ class Translator:
         self.html_mode_context = [False]
         self.indent_context: list[str] = []
         self.indent_offset = [0]
+        self.jira2summary = ctx.jira2summary
         self.opts = ctx.opts
         self.output_context: list[list[str]] = []
         self.preserve_whitespace = True
@@ -465,6 +467,10 @@ class Translator:
                             self.append(f'[{jira_key}]({jira_url})')
                     else:
                         self.append(f'{jira_key}')
+
+                    jira_summary = self.jira2summary.get(jira_key)
+                    if jira_summary:
+                        self.append(f': {jira_summary}')
 
                 jq_node = node.find('ac:parameter', {'ac:name': 'jqlQuery'})
                 if jq_node:

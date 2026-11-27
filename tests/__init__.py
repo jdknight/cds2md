@@ -132,9 +132,10 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
             *,
             attachment2target: dict | None = None,
             force_html: bool = False,
+            jira2summary: dict | None = None,
             opts: Namespace | None = None,
-            translator_cls: type[Translator] | None = None,
             title2target: dict | None = None,
+            translator_cls: type[Translator] | None = None,
             userid2name: dict | None = None,
             ctx: TranslatorContext | None = None) -> str:
         soup = BeautifulSoup(data, 'html.parser')
@@ -145,6 +146,7 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
 
             ctx = TranslatorContext(
                 attachment2target=attachment2target or {},
+                jira2summary=jira2summary or {},
                 opts=opts,
                 title2target=title2target or {
                     'unit-test': 'unit-test',

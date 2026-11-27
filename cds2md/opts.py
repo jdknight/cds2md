@@ -154,6 +154,11 @@ cds2md
         help='ignore any cached content',
     )
     parser.add_argument(
+        '--ignore-jira-api-features',
+        action='store_true',
+        help='ignore attempts to query jira api for content',
+    )
+    parser.add_argument(
         '--ignore-tls',
         action='store_true',
         help='ignore all TLS checks when communicating with Confluence',

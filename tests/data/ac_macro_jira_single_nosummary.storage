@@ -1,0 +1,4 @@
+<ac:structured-macro ac:name="jira">
+    <ac:parameter ac:name="key">TEST-123</ac:parameter>
+    <ac:parameter ac:name="showSummary">false</ac:parameter>
+</ac:structured-macro>

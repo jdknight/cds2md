@@ -81,6 +81,8 @@ options:
   --header, -H HEADER   http headers to include in requests
   --flat                ignore any Confluence-detected hierarchy structure
   --ignore-cache        ignore any cached content
+  --ignore-jira-api-features
+                        ignore attempts to query jira api for content
   --ignore-tls          ignore all TLS checks when communicating with Confluence
   --jira-url JIRA_URL   base url to use for any jira links
   --output OUTPUT       path to output markdown content into
