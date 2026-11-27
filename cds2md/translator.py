@@ -117,7 +117,7 @@ class Translator:
         # check if we should indent this text content
         indent = ' ' * self.indent_offset[-1]
         if indent and node.strip():
-            if self._last_ends_with_nl():
+            if self.last_ends_with_nl():
                 node_text = f'{indent}{node_text}'
             node_text = f'\n{indent}'.join(node_text.splitlines())
 
@@ -759,7 +759,7 @@ class Translator:
         else:
             # if this new li entry did not last end with a newline (e.g. a
             # nested sub-list), add one now
-            if not self._last_ends_with_nl():
+            if not self.last_ends_with_nl():
                 self.newline()
 
             indent = '-' if self.indent_context[-1] == 'ul' else '1.'
@@ -1269,7 +1269,7 @@ class Translator:
         # newline, we only want a ">" marking. However, we want to track that
         # this output is pending another admonition line since if we do not
         # eventually add a new line, we will want to pop/drop the setup ">".
-        if self.admonition_prefix_context[-1] and self._last_ends_with_nl():
+        if self.admonition_prefix_context[-1] and self.last_ends_with_nl():
             self.admonition_prefix_pending = bool(value) and value == '\n'
             if value == '\n':
                 self.output.append('>\n')
@@ -1279,7 +1279,7 @@ class Translator:
             self.admonition_prefix_pending = False
             self.output.append(value)
 
-    def _last_ends_with_nl(self) -> bool:
+    def last_ends_with_nl(self) -> bool:
         return not bool(self.output) or self.output[-1].endswith('\n')
 
     def _strip_trailing_whitespaces(self) -> None:
