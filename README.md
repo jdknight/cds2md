@@ -92,6 +92,42 @@ options:
   --wrap WRAP           hint to the number of characters to wrap to
 ```
 
+# Translator Overrides
+
+Users can perform custom translator overrides by defining a `conf.py` file and
+register a custom translator inside a `cds2md_setup` call. For example:
+
+```python
+from cds2md.translator import Translator
+
+class CustomTranslator(Translator):
+    def visit_ac_structured_macro(self, node) -> None:
+        macro_type = node.get('ac:name')
+
+        match macro_type:
+            case 'custom':
+                content = ''
+                content_node = node.find('content')
+                if content_node:
+                    content = content_node.text
+
+                if content:
+                    self.append('```')
+                    self.newline()
+                    self.append(f'{content}')
+                    self.newline()
+                    self.append('```')
+                    self.newline(count=2)
+
+                self.skip()
+
+            case _:
+                super().visit_ac_structured_macro(node)
+
+def cds2md_setup(app):
+    app.set_translator(CustomTranslator)
+```
+
 ----
 
 The CDS2MD project is unaffiliated with Atlassian.\
