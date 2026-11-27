@@ -232,8 +232,15 @@ class Translator:
 
         # if a page reference and no text description of a link, add the link
         # name now based on the content title value
-        ptlb_node = node.find('ac:plain-text-link-body', recursive=False)
-        if not ptlb_node:
+
+        content_title_node = node.find(
+            [
+                'ac:link-body',
+                'ac:plain-text-link-body',
+            ],
+            recursive=False,
+        )
+        if not content_title_node:
             page_ref_node = node.find('ri:page', recursive=False)
             if page_ref_node:
                 target_title = page_ref_node.get('ri:content-title')
