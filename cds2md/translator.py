@@ -121,7 +121,7 @@ class Translator:
                 node_text = f'{indent}{node_text}'
             node_text = f'\n{indent}'.join(node_text.splitlines())
 
-        self._append(node_text)
+        self.append(node_text)
 
         # ensure re-flag preserving whitespaces after processing text
         self.preserve_whitespace = True
@@ -129,16 +129,16 @@ class Translator:
     def visit_a(self, node: Tag) -> None:
         if self._is_html_mode():
             href = node.get('href', '')
-            self._append(f'<a href="{href}">')
+            self.append(f'<a href="{href}">')
         else:
-            self._append('[')
+            self.append('[')
 
     def depart_a(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</a>')
+            self.append('</a>')
         else:
             href = node.get('href', '')
-            self._append(f']({href})')
+            self.append(f']({href})')
 
     def visit_ac_image(self, node: Tag) -> None:
         attachment_url = node.find('ri:url', recursive=False)
@@ -183,9 +183,9 @@ class Translator:
 
     def _build_image(self, href: str, alt: str) -> None:
         if self._is_html_mode() or self.opts.tweak_html_images:
-            self._append(f'<img href="{href}" alt="{alt}">')
+            self.append(f'<img href="{href}" alt="{alt}">')
         else:
-            self._append(f'![{alt}]({href})')
+            self.append(f'![{alt}]({href})')
 
     def visit_ac_inline_comment_marker(self, node: Tag) -> None:
         pass
@@ -221,15 +221,15 @@ class Translator:
                 logger.warning(f'missing name map for user key: {user_key}')
             else:
                 display_name = self.userid2name.get(user_key)
-                self._append(f'@{display_name}')
+                self.append(f'@{display_name}')
 
             raise SkipNode
 
         if self._is_html_mode():
             href = self._resolve_ac_link_href(node)
-            self._append(f'<a href="{href}">')
+            self.append(f'<a href="{href}">')
         else:
-            self._append('[')
+            self.append('[')
 
         # if a page reference and no text description of a link, add the link
         # name now based on the content title value
@@ -246,14 +246,14 @@ class Translator:
             if page_ref_node:
                 target_title = page_ref_node.get('ri:content-title')
                 if target_title:
-                    self._append(cast('str', target_title))
+                    self.append(cast('str', target_title))
 
     def depart_ac_link(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</a>')
+            self.append('</a>')
         else:
             href = self._resolve_ac_link_href(node)
-            self._append(f']({href})')
+            self.append(f']({href})')
 
     def _depart_ac_link_attachment(self, node: Tag) -> str:
         attachment_node = node.find('ri:attachment', recursive=False)
@@ -364,7 +364,7 @@ class Translator:
                 if code_data_node:
                     code_data = code_data_node.text
 
-                self._append(f'```{code_language}\n{code_data}\n```\n\n')
+                self.append(f'```{code_language}\n{code_data}\n```\n\n')
                 raise SkipNode
 
             case 'info' | 'note' | 'tip' | 'warning':
@@ -380,35 +380,35 @@ class Translator:
                     case 'info':
                         match self.admonition_type:
                             case AdmonitionType.DOCUSAURUS:
-                                self._append(f':::note{title_append}')
+                                self.append(f':::note{title_append}')
                             case AdmonitionType.GITHUB | AdmonitionType.GITLAB:
-                                self._append('> [!NOTE]')
+                                self.append('> [!NOTE]')
                             case AdmonitionType.MYST:
-                                self._append(':::{note}')
+                                self.append(':::{note}')
                     case 'note':
                         match self.admonition_type:
                             case AdmonitionType.DOCUSAURUS:
-                                self._append(f':::warning{title_append}')
+                                self.append(f':::warning{title_append}')
                             case AdmonitionType.GITHUB | AdmonitionType.GITLAB:
-                                self._append('> [!WARNING]')
+                                self.append('> [!WARNING]')
                             case AdmonitionType.MYST:
-                                self._append(':::{warning}')
+                                self.append(':::{warning}')
                     case 'tip':
                         match self.admonition_type:
                             case AdmonitionType.DOCUSAURUS:
-                                self._append(f':::tip{title_append}')
+                                self.append(f':::tip{title_append}')
                             case AdmonitionType.GITHUB | AdmonitionType.GITLAB:
-                                self._append('> [!TIP]')
+                                self.append('> [!TIP]')
                             case AdmonitionType.MYST:
-                                self._append(':::{tip}')
+                                self.append(':::{tip}')
                     case 'warning':
                         match self.admonition_type:
                             case AdmonitionType.DOCUSAURUS:
-                                self._append(f':::caution{title_append}')
+                                self.append(f':::caution{title_append}')
                             case AdmonitionType.GITHUB | AdmonitionType.GITLAB:
-                                self._append('> [!CAUTION]')
+                                self.append('> [!CAUTION]')
                             case AdmonitionType.MYST:
-                                self._append(':::{caution}')
+                                self.append(':::{caution}')
 
                 # track if this type of admonition will be prefixed with ">"
                 is_admonition_prefixed = False
@@ -437,7 +437,7 @@ class Translator:
                 # include any admonition title (if supported)
                 if self.admonition_type != AdmonitionType.DOCUSAURUS:
                     if admonition_title:
-                        self._append(f'**{admonition_title}**')
+                        self.append(f'**{admonition_title}**')
                         self.newline(count=2)
 
             case 'html':
@@ -446,7 +446,7 @@ class Translator:
                 if html_data_node:
                     html_data = html_data_node.text
 
-                self._append(f'{html_data}\n\n')
+                self.append(f'{html_data}\n\n')
                 raise SkipNode
 
             case 'jira':
@@ -460,11 +460,11 @@ class Translator:
                         jira_url = f'{jira_base}/browse/{jira_key}'
 
                         if self._is_html_mode():
-                            self._append(f'<a href="{jira_url}">{jira_key}</a>')
+                            self.append(f'<a href="{jira_url}">{jira_key}</a>')
                         else:
-                            self._append(f'[{jira_key}]({jira_url})')
+                            self.append(f'[{jira_key}]({jira_url})')
                     else:
-                        self._append(f'{jira_key}')
+                        self.append(f'{jira_key}')
 
                 jq_node = node.find('ac:parameter', {'ac:name': 'jqlQuery'})
                 if jq_node:
@@ -475,21 +475,21 @@ class Translator:
                         jira_url = f'{jira_base}/issues/?jql={quoted_jq}'
 
                         if self._is_html_mode():
-                            self._append(f'<a href="{jira_url}">Jira Query</a>')
+                            self.append(f'<a href="{jira_url}">Jira Query</a>')
                         else:
-                            self._append(f'[Jira Query]({jira_url})')
+                            self.append(f'[Jira Query]({jira_url})')
                     else:
                         if self._is_html_mode():
-                            self._append('<pre>')
+                            self.append('<pre>')
                         else:
-                            self._append('```jql')
+                            self.append('```jql')
                         self.newline()
-                        self._append(f'{jq}')
+                        self.append(f'{jq}')
                         self.newline()
                         if self._is_html_mode():
-                            self._append('</pre>')
+                            self.append('</pre>')
                         else:
-                            self._append('```')
+                            self.append('```')
                         self.newline(count=2)
 
                 raise SkipNode
@@ -509,7 +509,7 @@ class Translator:
                 if raw_text.startswith('--uriencoded--'):
                     raw_text = unquote(raw_text.removeprefix('--uriencoded--'))
 
-                self._append(f'${raw_text.strip()}$')
+                self.append(f'${raw_text.strip()}$')
                 raise SkipNode
 
             case 'noformat':
@@ -520,16 +520,16 @@ class Translator:
                     noformat_data = noformat_data_node.text.strip()
 
                 if self._is_html_mode():
-                    self._append('<pre>')
+                    self.append('<pre>')
                 else:
-                    self._append('```')
+                    self.append('```')
                 self.newline()
-                self._append(f'{noformat_data}')
+                self.append(f'{noformat_data}')
                 self.newline()
                 if self._is_html_mode():
-                    self._append('</pre>')
+                    self.append('</pre>')
                 else:
-                    self._append('```')
+                    self.append('```')
                 self.newline(count=2)
                 raise SkipNode
 
@@ -545,16 +545,16 @@ class Translator:
                     plantuml_data = plantuml_data_node.text
 
                 if self._is_html_mode():
-                    self._append('<div class="plantuml">')
+                    self.append('<div class="plantuml">')
                 else:
-                    self._append('```plantuml')
+                    self.append('```plantuml')
                 self.newline()
-                self._append(f'{plantuml_data}')
+                self.append(f'{plantuml_data}')
                 self.newline()
                 if self._is_html_mode():
-                    self._append('</div>')
+                    self.append('</div>')
                 else:
-                    self._append('```')
+                    self.append('```')
                 self.newline(count=2)
                 raise SkipNode
 
@@ -611,7 +611,7 @@ class Translator:
 
                 match self.admonition_type:
                     case AdmonitionType.DOCUSAURUS | AdmonitionType.MYST:
-                        self._append(':::')
+                        self.append(':::')
                         self.newline(count=2)
 
                 was_admonition_prefixed = self.admonition_prefix_context.pop()
@@ -625,13 +625,13 @@ class Translator:
 
     def visit_ac_task(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<li>')
+            self.append('<li>')
         else:
-            self._append('- ')
+            self.append('- ')
 
     def depart_ac_task(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</li>')
+            self.append('</li>')
         else:
             self.newline()
 
@@ -645,18 +645,18 @@ class Translator:
         task_contents = ' '.join(''.join(self.output).split())
         self.output = self.output_context.pop()
 
-        self._append(f'{task_contents}')
+        self.append(f'{task_contents}')
 
     def visit_ac_task_id(self, node: Tag) -> None:
         raise SkipNode
 
     def visit_ac_task_list(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<ul>')
+            self.append('<ul>')
 
     def depart_ac_task_list(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</ul>')
+            self.append('</ul>')
 
     def visit_ac_task_status(self, node: Tag) -> None:
         if node.text == 'complete':
@@ -674,7 +674,7 @@ class Translator:
 
     def visit_br(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<br>')
+            self.append('<br>')
         else:
             self.newline()
 
@@ -682,13 +682,13 @@ class Translator:
 
     def visit_blockquote(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<blockquote>')
+            self.append('<blockquote>')
         else:
             self.admonition_prefix_context.append(True)
 
     def depart_blockquote(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</blockquote>')
+            self.append('</blockquote>')
         else:
             self.admonition_prefix_context.pop()
 
@@ -698,14 +698,14 @@ class Translator:
 
     def visit_code(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<code>')
+            self.append('<code>')
         else:
-            self._append(f'`{node.text}`')
+            self.append(f'`{node.text}`')
             raise SkipNode
 
     def depart_code(self, node: Tag) -> None:
         assert self._is_html_mode()
-        self._append('</code>')
+        self.append('</code>')
 
     def visit_colgroup(self, node: Tag) -> None:
         raise SkipNode
@@ -724,38 +724,38 @@ class Translator:
 
     def visit_dd(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<dd>')
+            self.append('<dd>')
 
     def depart_dd(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</dd>')
+            self.append('</dd>')
         else:
             self.newline(count=2)
 
     def visit_dl(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<dl>')
+            self.append('<dl>')
 
     def depart_dl(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</dl>')
+            self.append('</dl>')
 
     def visit_dt(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<dt>')
+            self.append('<dt>')
         else:
-            self._append('**')
+            self.append('**')
 
     def depart_dt(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</dt>')
+            self.append('</dt>')
         else:
-            self._append('**')
+            self.append('**')
             self.newline(count=2)
 
     def visit_li(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<li>')
+            self.append('<li>')
         else:
             # if this new li entry did not last end with a newline (e.g. a
             # nested sub-list), add one now
@@ -764,131 +764,131 @@ class Translator:
 
             indent = '-' if self.indent_context[-1] == 'ul' else '1.'
             offset = ' ' * self.indent_offset[-2]
-            self._append(f'{offset}{indent} ')
+            self.append(f'{offset}{indent} ')
 
             self.preserve_whitespace = False
 
     def depart_li(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</li>')
+            self.append('</li>')
         else:
             self.newline()
 
     def visit_em(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<em>')
+            self.append('<em>')
         else:
-            self._append('*')
+            self.append('*')
 
     def depart_em(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</em>')
+            self.append('</em>')
         else:
-            self._append('*')
+            self.append('*')
 
     def visit_h1(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h1>')
+            self.append('<h1>')
         else:
-            self._append('# ')
+            self.append('# ')
 
     def depart_h1(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h1>')
+            self.append('</h1>')
         else:
             self.newline(count=2)
 
     def visit_h2(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h2>')
+            self.append('<h2>')
         else:
-            self._append('## ')
+            self.append('## ')
 
     def depart_h2(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h2>')
+            self.append('</h2>')
         else:
             self.newline(count=2)
 
     def visit_h3(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h3>')
+            self.append('<h3>')
         else:
-            self._append('### ')
+            self.append('### ')
 
     def depart_h3(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h3>')
+            self.append('</h3>')
         else:
             self.newline(count=2)
 
     def visit_h4(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h4>')
+            self.append('<h4>')
         else:
-            self._append('#### ')
+            self.append('#### ')
 
     def depart_h4(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h4>')
+            self.append('</h4>')
         else:
             self.newline(count=2)
 
     def visit_h5(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h5>')
+            self.append('<h5>')
         else:
-            self._append('##### ')
+            self.append('##### ')
 
     def depart_h5(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h5>')
+            self.append('</h5>')
         else:
             self.newline(count=2)
 
     def visit_h6(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<h6>')
+            self.append('<h6>')
         else:
-            self._append('###### ')
+            self.append('###### ')
 
     def depart_h6(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</h6>')
+            self.append('</h6>')
         else:
             self.newline(count=2)
 
     def visit_hr(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<hr>')
+            self.append('<hr>')
         else:
             self._strip_trailing_whitespaces()
             self.newline(count=2)
 
-            self._append('---')
+            self.append('---')
 
         self.newline(count=2)
         raise SkipNode
 
     def visit_img(self, node: Tag) -> None:
         if self._is_html_mode() or self.opts.tweak_html_images:
-            self._append(f'{node}')
+            self.append(f'{node}')
         else:
             src = node.get('src', '')
-            self._append(f'![]({src})')
+            self.append(f'![]({src})')
 
         raise SkipNode
 
     def visit_ol(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<ol>')
+            self.append('<ol>')
         else:
             self.indent_context.append('ol')
             self.indent_offset.append(self.indent_offset[-1] + 3)
 
     def depart_ol(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</ol>')
+            self.append('</ol>')
         else:
             self.indent_context.pop()
             self.indent_offset.pop()
@@ -896,11 +896,11 @@ class Translator:
 
     def visit_p(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<p>')
+            self.append('<p>')
 
     def depart_p(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</p>')
+            self.append('</p>')
         elif self.indent_offset[-1] == 0:
             self.newline(count=2)
 
@@ -910,10 +910,10 @@ class Translator:
             raise SkipNode
 
         if self._is_html_mode():
-            self._append(f'{node}')
+            self.append(f'{node}')
             raise SkipNode
 
-        self._append('```')
+        self.append('```')
         self.newline()
 
         # some older confluence output may use br tags to trigger newline hints;
@@ -937,12 +937,12 @@ class Translator:
 
         # take normalizes lines and append/newline inject (to handled nested)
         for line in normalized_content.splitlines():
-            self._append(f'{line}')
+            self.append(f'{line}')
             self.newline()
 
         self._strip_trailing_whitespaces()
         self.newline()
-        self._append('```')
+        self.append('```')
         self.newline(count=2)
         raise SkipNode
 
@@ -954,15 +954,15 @@ class Translator:
 
     def visit_s(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<s>')
+            self.append('<s>')
         else:
-            self._append('~~')
+            self.append('~~')
 
     def depart_s(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</s>')
+            self.append('</s>')
         else:
-            self._append('~~')
+            self.append('~~')
 
     def visit_span(self, node: Tag) -> None:
         span_class = cast('str', node.get('class', ''))
@@ -976,30 +976,30 @@ class Translator:
 
     def visit_strong(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<strong>')
+            self.append('<strong>')
         else:
-            self._append('**')
+            self.append('**')
 
     def depart_strong(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</strong>')
+            self.append('</strong>')
         else:
-            self._append('**')
+            self.append('**')
 
     visit_b = visit_strong
     depart_b = depart_strong
 
     def visit_sub(self, node: Tag) -> None:
-        self._append('<sub>')
+        self.append('<sub>')
 
     def depart_sub(self, node: Tag) -> None:
-        self._append('</sub>')
+        self.append('</sub>')
 
     def visit_sup(self, node: Tag) -> None:
-        self._append('<sup>')
+        self.append('<sup>')
 
     def depart_sup(self, node: Tag) -> None:
-        self._append('</sup>')
+        self.append('</sup>')
 
     def visit_table(self, node: Tag) -> None:
         html_mode = self.opts.tweak_html_tables
@@ -1026,41 +1026,41 @@ class Translator:
         self.html_mode_context.append(html_mode)
 
         if self._is_html_mode():
-            self._append('<table>')
+            self.append('<table>')
             self.newline()
 
     def depart_table(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</table>')
+            self.append('</table>')
 
         self.html_mode_context.pop()
         self.newline(count=2)
 
     def visit_tbody(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append(' <tbody>')
+            self.append(' <tbody>')
             self.newline()
 
     def depart_tbody(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append(' </tbody>')
+            self.append(' </tbody>')
             self.newline()
 
     def visit_td(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<td')
+            self.append('<td')
 
             colspan = node.get('colspan', '')
             if colspan:
-                self._append(f' colspan="{colspan}"')
+                self.append(f' colspan="{colspan}"')
 
             rowspan = node.get('rowspan', '')
             if rowspan:
-                self._append(f' rowspan="{rowspan}"')
+                self.append(f' rowspan="{rowspan}"')
 
-            self._append('>')
+            self.append('>')
         else:
-            self._append('| ')
+            self.append('| ')
 
             # we will be capturing all output to bind into a single line
             self.output_context.append(self.output)
@@ -1069,24 +1069,24 @@ class Translator:
     def depart_td(self, node: Tag) -> None:
         if self._is_html_mode():
             self._strip_trailing_whitespaces()
-            self._append('</td>')
+            self.append('</td>')
         else:
             # group all captured content and restore output capture
             td_contents = ' '.join(''.join(self.output).split())
             self.output = self.output_context.pop()
 
-            self._append(f'{td_contents} ')
+            self.append(f'{td_contents} ')
 
             # if this is the last td, close up the row
             next_tag = node.find_next_sibling()
             if not next_tag or next_tag.name != 'td':
-                self._append('|\n')
+                self.append('|\n')
 
     def visit_th(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<th>')
+            self.append('<th>')
         else:
-            self._append('| ')
+            self.append('| ')
 
             # we will be capturing all output to bind into a single line
             self.output_context.append(self.output)
@@ -1095,18 +1095,18 @@ class Translator:
     def depart_th(self, node: Tag) -> None:
         if self._is_html_mode():
             self._strip_trailing_whitespaces()
-            self._append('</th>')
+            self.append('</th>')
         else:
             # group all captured content and restore output capture
             th_contents = ' '.join(''.join(self.output).split())
             self.output = self.output_context.pop()
 
-            self._append(f'{th_contents} ')
+            self.append(f'{th_contents} ')
 
             # if this is the last th, close up the row
             next_tag = node.find_next_sibling()
             if not next_tag or next_tag.name != 'th':
-                self._append('|\n')
+                self.append('|\n')
 
                 # generate a line separating from the table's body after the
                 # last th instance; while this would typically be done under
@@ -1116,21 +1116,21 @@ class Translator:
                 assert node.parent
                 column_count = len(node.parent.find_all('th'))
                 if column_count:
-                    self._append('| - ' * column_count + '|\n')
+                    self.append('| - ' * column_count + '|\n')
 
     def visit_thead(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append(' <thead>')
+            self.append(' <thead>')
             self.newline()
 
     def depart_thead(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append(' </thead>')
+            self.append(' </thead>')
             self.newline()
 
     def visit_time(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append(f'{node}')
+            self.append(f'{node}')
         else:
             time_display = node.text.strip()
 
@@ -1141,13 +1141,13 @@ class Translator:
             time_display += f'{suffix}'
 
             if time_display:
-                self._append(time_display)
+                self.append(time_display)
 
         raise SkipNode
 
     def visit_tr(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('  <tr>')
+            self.append('  <tr>')
         else:
             # if starting a row and this table never had any header entries,
             # build a dummy/empty header
@@ -1157,30 +1157,30 @@ class Translator:
             if not thead_node and not node.find_previous_sibling():
                 column_count = len(node.find_all('td'))
                 if column_count:
-                    self._append('| ' * column_count + '|\n')
-                    self._append('| - ' * column_count + '|\n')
+                    self.append('| ' * column_count + '|\n')
+                    self.append('| - ' * column_count + '|\n')
 
     def depart_tr(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</tr>')
+            self.append('</tr>')
             self.newline()
 
     def visit_u(self, node: Tag) -> None:
-        self._append('<u>')
+        self.append('<u>')
 
     def depart_u(self, node: Tag) -> None:
-        self._append('</u>')
+        self.append('</u>')
 
     def visit_ul(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('<ul>')
+            self.append('<ul>')
         else:
             self.indent_context.append('ul')
             self.indent_offset.append(self.indent_offset[-1] + 2)
 
     def depart_ul(self, node: Tag) -> None:
         if self._is_html_mode():
-            self._append('</ul>')
+            self.append('</ul>')
         else:
             self.indent_context.pop()
             self.indent_offset.pop()
@@ -1221,9 +1221,9 @@ class Translator:
         title_node = node.find('ac:parameter', {'ac:name': 'title'})
         if title_node:
             if self._is_html_mode():
-                self._append(f'<strong>{title_node.text}</strong>')
+                self.append(f'<strong>{title_node.text}</strong>')
             else:
-                self._append(f'**{title_node.text}**')
+                self.append(f'**{title_node.text}**')
 
             if newlines:
                 self.newline(count=2)
@@ -1259,9 +1259,9 @@ class Translator:
             self.output[-1] = self.output[-1].rstrip(' ')
 
         for _ in range(count):
-            self._append('\n')
+            self.append('\n')
 
-    def _append(self, value: str) -> None:
+    def append(self, value: str) -> None:
         # If starting a new line for an admonition, we will be populating an
         # "> VALUE" for the entry. If the text being processed now is an empty
         # newline, we only want a ">" marking. However, we want to track that
