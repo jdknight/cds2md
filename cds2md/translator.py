@@ -900,12 +900,16 @@ class Translator:
             self._newline(count=2)
 
     def visit_pre(self, node: Tag) -> None:
+        content = node.text.strip()
+        if not content:
+            raise SkipNode
+
         if self._is_html_mode():
             self._append('<pre>')
         else:
             self._append('```')
         self._newline()
-        self._append(f'{node.text.strip()}')
+        self._append(f'{content}')
         self._newline()
         if self._is_html_mode():
             self._append('</pre>')
