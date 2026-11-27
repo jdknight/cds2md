@@ -111,7 +111,7 @@ class Translator:
 
             # always restore trailing whitespace to ensure there is spacing
             # between this content and any inlined content that may follow;
-            # we can cleaning any trailing left over spaces in `_newline()`
+            # we can cleaning any trailing left over spaces in `newline()`
             node_text += tail
 
         # check if we should indent this text content
@@ -432,13 +432,13 @@ class Translator:
                         AdmonitionType.DEFAULT,
                         AdmonitionType.PLAIN,
                     }:
-                        self._newline()
+                        self.newline()
 
                 # include any admonition title (if supported)
                 if self.admonition_type != AdmonitionType.DOCUSAURUS:
                     if admonition_title:
                         self._append(f'**{admonition_title}**')
-                        self._newline(count=2)
+                        self.newline(count=2)
 
             case 'html':
                 html_data = ''
@@ -483,14 +483,14 @@ class Translator:
                             self._append('<pre>')
                         else:
                             self._append('```jql')
-                        self._newline()
+                        self.newline()
                         self._append(f'{jq}')
-                        self._newline()
+                        self.newline()
                         if self._is_html_mode():
                             self._append('</pre>')
                         else:
                             self._append('```')
-                        self._newline(count=2)
+                        self.newline(count=2)
 
                 raise SkipNode
 
@@ -523,14 +523,14 @@ class Translator:
                     self._append('<pre>')
                 else:
                     self._append('```')
-                self._newline()
+                self.newline()
                 self._append(f'{noformat_data}')
-                self._newline()
+                self.newline()
                 if self._is_html_mode():
                     self._append('</pre>')
                 else:
                     self._append('```')
-                self._newline(count=2)
+                self.newline(count=2)
                 raise SkipNode
 
             case 'panel':
@@ -548,14 +548,14 @@ class Translator:
                     self._append('<div class="plantuml">')
                 else:
                     self._append('```plantuml')
-                self._newline()
+                self.newline()
                 self._append(f'{plantuml_data}')
-                self._newline()
+                self.newline()
                 if self._is_html_mode():
                     self._append('</div>')
                 else:
                     self._append('```')
-                self._newline(count=2)
+                self.newline(count=2)
                 raise SkipNode
 
             case 'status':
@@ -612,12 +612,12 @@ class Translator:
                 match self.admonition_type:
                     case AdmonitionType.DOCUSAURUS | AdmonitionType.MYST:
                         self._append(':::')
-                        self._newline(count=2)
+                        self.newline(count=2)
 
                 was_admonition_prefixed = self.admonition_prefix_context.pop()
                 if was_admonition_prefixed and self.admonition_prefix_pending:
                     self.output.pop()
-                    self._newline()
+                    self.newline()
 
     # legacy macro calls
     visit_ac_macro = visit_ac_structured_macro
@@ -633,7 +633,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</li>')
         else:
-            self._newline()
+            self.newline()
 
     def visit_ac_task_body(self, node: Tag) -> None:
         # we will be capturing all output to bind into a single line
@@ -676,7 +676,7 @@ class Translator:
         if self._is_html_mode():
             self._append('<br>')
         else:
-            self._newline()
+            self.newline()
 
         raise SkipNode
 
@@ -694,7 +694,7 @@ class Translator:
 
             if self.admonition_prefix_pending:
                 self.output.pop()
-                self._newline()
+                self.newline()
 
     def visit_code(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -714,7 +714,7 @@ class Translator:
         pass
 
     def depart_div(self, node: Tag) -> None:
-        self._newline()
+        self.newline()
 
     def visit_document(self, node: Tag) -> None:
         pass
@@ -730,7 +730,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</dd>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_dl(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -751,7 +751,7 @@ class Translator:
             self._append('</dt>')
         else:
             self._append('**')
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_li(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -760,7 +760,7 @@ class Translator:
             # if this new li entry did not last end with a newline (e.g. a
             # nested sub-list), add one now
             if not self._last_ends_with_nl():
-                self._newline()
+                self.newline()
 
             indent = '-' if self.indent_context[-1] == 'ul' else '1.'
             offset = ' ' * self.indent_offset[-2]
@@ -772,7 +772,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</li>')
         else:
-            self._newline()
+            self.newline()
 
     def visit_em(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -796,7 +796,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</h1>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_h2(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -808,7 +808,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</h2>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_h3(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -820,7 +820,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</h3>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_h4(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -832,7 +832,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</h4>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_h5(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -844,7 +844,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</h5>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_h6(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -856,18 +856,18 @@ class Translator:
         if self._is_html_mode():
             self._append('</h6>')
         else:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_hr(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('<hr>')
         else:
             self._strip_trailing_whitespaces()
-            self._newline(count=2)
+            self.newline(count=2)
 
             self._append('---')
 
-        self._newline(count=2)
+        self.newline(count=2)
         raise SkipNode
 
     def visit_img(self, node: Tag) -> None:
@@ -892,7 +892,7 @@ class Translator:
         else:
             self.indent_context.pop()
             self.indent_offset.pop()
-            self._newline()
+            self.newline()
 
     def visit_p(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -902,7 +902,7 @@ class Translator:
         if self._is_html_mode():
             self._append('</p>')
         elif self.indent_offset[-1] == 0:
-            self._newline(count=2)
+            self.newline(count=2)
 
     def visit_pre(self, node: Tag) -> None:
         content = node.text.strip()
@@ -914,7 +914,7 @@ class Translator:
             raise SkipNode
 
         self._append('```')
-        self._newline()
+        self.newline()
 
         # some older confluence output may use br tags to trigger newline hints;
         # if so, we will focus on using br tags as the newline markers over
@@ -938,12 +938,12 @@ class Translator:
         # take normalizes lines and append/newline inject (to handled nested)
         for line in normalized_content.splitlines():
             self._append(f'{line}')
-            self._newline()
+            self.newline()
 
         self._strip_trailing_whitespaces()
-        self._newline()
+        self.newline()
         self._append('```')
-        self._newline(count=2)
+        self.newline(count=2)
         raise SkipNode
 
     def visit_ri_attachment(self, node: Tag) -> None:
@@ -1027,24 +1027,24 @@ class Translator:
 
         if self._is_html_mode():
             self._append('<table>')
-            self._newline()
+            self.newline()
 
     def depart_table(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('</table>')
 
         self.html_mode_context.pop()
-        self._newline(count=2)
+        self.newline(count=2)
 
     def visit_tbody(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append(' <tbody>')
-            self._newline()
+            self.newline()
 
     def depart_tbody(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append(' </tbody>')
-            self._newline()
+            self.newline()
 
     def visit_td(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -1121,12 +1121,12 @@ class Translator:
     def visit_thead(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append(' <thead>')
-            self._newline()
+            self.newline()
 
     def depart_thead(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append(' </thead>')
-            self._newline()
+            self.newline()
 
     def visit_time(self, node: Tag) -> None:
         if self._is_html_mode():
@@ -1163,7 +1163,7 @@ class Translator:
     def depart_tr(self, node: Tag) -> None:
         if self._is_html_mode():
             self._append('</tr>')
-            self._newline()
+            self.newline()
 
     def visit_u(self, node: Tag) -> None:
         self._append('<u>')
@@ -1184,7 +1184,7 @@ class Translator:
         else:
             self.indent_context.pop()
             self.indent_offset.pop()
-            self._newline()
+            self.newline()
 
     def unknown_visit(self, node: Tag) -> None:
         name = self._tag_name(node)
@@ -1226,7 +1226,7 @@ class Translator:
                 self._append(f'**{title_node.text}**')
 
             if newlines:
-                self._newline(count=2)
+                self.newline(count=2)
 
     def _is_html_mode(self) -> bool:
         return self.html_mode_context[-1]
@@ -1252,7 +1252,7 @@ class Translator:
 
         return ref.as_posix()
 
-    def _newline(self, count: int = 1) -> None:
+    def newline(self, count: int = 1) -> None:
         # if starting a newline, ensure our last block does not have any
         # trailing spaces in it
         if self.output:
