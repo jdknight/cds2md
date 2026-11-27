@@ -17,7 +17,7 @@ class TestTranslatorAcMacroStatus(Cds2mdTranslatorTestCase):
             <strong>COMPLETED</strong>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_status_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_status.storage'
@@ -29,4 +29,4 @@ class TestTranslatorAcMacroStatus(Cds2mdTranslatorTestCase):
             **COMPLETED**
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

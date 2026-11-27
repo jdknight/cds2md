@@ -14,4 +14,4 @@ class TestTranslatorSup(Cds2mdTranslatorTestCase):
 
         expected = 'my <sup>test</sup> example'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

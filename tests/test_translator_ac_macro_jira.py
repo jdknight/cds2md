@@ -19,7 +19,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             </pre>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_search_no_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_search.storage'
@@ -33,7 +33,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             ```
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_search_url_html(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_search.storage'
@@ -49,7 +49,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             <a href="{expected_url}">Jira Query</a>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_search_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_search.storage'
@@ -64,7 +64,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             [Jira Query](http://jira.example.com/issues/?jql=project%20%3D%20%22TEST%22)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_single_no_url(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_single.storage'
@@ -76,7 +76,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             TEST-123
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_single_url_html(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_single.storage'
@@ -91,7 +91,7 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             <a href="https://www.example.org/tm/browse/TEST-123">TEST-123</a>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_jira_single_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_single.storage'
@@ -106,4 +106,4 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
             [TEST-123](https://www.example.org/tm/browse/TEST-123)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

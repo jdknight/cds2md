@@ -23,4 +23,4 @@ class TestTranslatorBlockquote(Cds2mdTranslatorTestCase):
             four
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

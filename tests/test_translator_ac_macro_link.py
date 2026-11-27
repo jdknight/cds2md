@@ -26,7 +26,7 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             [](subfolder/example.svg)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_link_attachment_self(self) -> None:
         file = DATA_FOLDER / 'ac_macro_link_attachment_self.storage'
@@ -46,7 +46,7 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             [](example42.svg)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_link_page_child(self) -> None:
         file = DATA_FOLDER / 'ac_macro_link_page.storage'
@@ -63,7 +63,7 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             [Other page](another-container/other-page)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_link_page_parent(self) -> None:
         file = DATA_FOLDER / 'ac_macro_link_page.storage'
@@ -80,7 +80,7 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             [Other page](../other-page)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_link_page_sibling(self) -> None:
         file = DATA_FOLDER / 'ac_macro_link_page.storage'
@@ -97,7 +97,7 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             [Other page](other-page)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_link_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_link_title.storage'
@@ -114,4 +114,4 @@ class TestTranslatorAcMacroLink(Cds2mdTranslatorTestCase):
             - This is a [custom name](other-page) link.
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

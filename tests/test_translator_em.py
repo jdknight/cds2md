@@ -14,7 +14,7 @@ class TestTranslatorEm(Cds2mdTranslatorTestCase):
 
         expected = 'an <em>example</em> emphasis'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_em_markdown(self) -> None:
         file = DATA_FOLDER / 'em.storage'
@@ -24,4 +24,4 @@ class TestTranslatorEm(Cds2mdTranslatorTestCase):
 
         expected = 'an *example* emphasis'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

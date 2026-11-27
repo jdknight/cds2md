@@ -17,7 +17,7 @@ class TestTranslatorTime(Cds2mdTranslatorTestCase):
             2026-11-24
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_time_value(self) -> None:
         file = DATA_FOLDER / 'time_value.storage'
@@ -29,4 +29,4 @@ class TestTranslatorTime(Cds2mdTranslatorTestCase):
             Nov 25, 2026
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

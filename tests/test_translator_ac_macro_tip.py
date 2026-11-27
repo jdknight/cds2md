@@ -18,7 +18,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_default_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -32,7 +32,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_docusaurus_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip.storage'
@@ -49,7 +49,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_docusaurus_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -66,7 +66,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_github_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip.storage'
@@ -82,7 +82,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_github_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -100,7 +100,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_gitlab_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip.storage'
@@ -116,7 +116,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_gitlab_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -134,7 +134,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_myst_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip.storage'
@@ -151,7 +151,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_myst_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -170,7 +170,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_plain_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip.storage'
@@ -185,7 +185,7 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_tip_plain_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_tip_title.storage'
@@ -202,4 +202,4 @@ class TestTranslatorAcMacroTip(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

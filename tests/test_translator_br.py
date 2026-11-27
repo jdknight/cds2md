@@ -18,4 +18,4 @@ class TestTranslatorBr(Cds2mdTranslatorTestCase):
             lines
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

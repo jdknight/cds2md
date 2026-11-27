@@ -22,7 +22,7 @@ class TestTranslatorAcMacroPlantuml(Cds2mdTranslatorTestCase):
             </div>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_plantuml_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_plantuml.storage'
@@ -39,4 +39,4 @@ class TestTranslatorAcMacroPlantuml(Cds2mdTranslatorTestCase):
             ```
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

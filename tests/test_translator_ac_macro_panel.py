@@ -19,4 +19,4 @@ class TestTranslatorAcMacroPanel(Cds2mdTranslatorTestCase):
             panel **content**
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

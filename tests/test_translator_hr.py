@@ -14,4 +14,4 @@ class TestTranslatorHr(Cds2mdTranslatorTestCase):
 
         expected = '---'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

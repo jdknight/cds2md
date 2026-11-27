@@ -21,4 +21,4 @@ class TestTranslatorAcLinkUser(Cds2mdTranslatorTestCase):
             @my-name
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

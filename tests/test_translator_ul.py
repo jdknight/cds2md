@@ -38,4 +38,4 @@ class TestTranslatorUl(Cds2mdTranslatorTestCase):
     quam dapibus tempor. Proin in lorem elementum, vulputate odio non, euismod
     arcu.'''
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

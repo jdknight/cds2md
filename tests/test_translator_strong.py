@@ -14,7 +14,7 @@ class TestTranslatorStrong(Cds2mdTranslatorTestCase):
 
         expected = 'word1 **word2** word3'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_strong(self) -> None:
         file = DATA_FOLDER / 'strong.storage'
@@ -24,4 +24,4 @@ class TestTranslatorStrong(Cds2mdTranslatorTestCase):
 
         expected = 'word1 **word2** word3'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

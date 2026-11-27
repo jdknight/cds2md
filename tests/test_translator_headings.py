@@ -27,4 +27,4 @@ class TestTranslatorHeadings(Cds2mdTranslatorTestCase):
             ###### heading 6
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

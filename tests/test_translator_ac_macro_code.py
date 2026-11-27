@@ -23,4 +23,4 @@ class TestTranslatorAcMacroCode(Cds2mdTranslatorTestCase):
             ```
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

@@ -17,7 +17,7 @@ class TestTranslatorImg(Cds2mdTranslatorTestCase):
 
         expected = '<img height="100" src="pic.png" width="200"/>'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_img_markdown(self) -> None:
         file = DATA_FOLDER / 'img.storage'
@@ -27,4 +27,4 @@ class TestTranslatorImg(Cds2mdTranslatorTestCase):
 
         expected = '![](pic.png)'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

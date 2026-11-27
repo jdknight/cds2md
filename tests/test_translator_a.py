@@ -14,4 +14,4 @@ class TestTranslatorA(Cds2mdTranslatorTestCase):
 
         expected = 'this is [a link](http://example.org/test) to a site'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

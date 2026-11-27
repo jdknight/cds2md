@@ -21,7 +21,7 @@ class TestTranslatorAcMacroImage(Cds2mdTranslatorTestCase):
             ![](example.png)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_image_html(self) -> None:
         file = DATA_FOLDER / 'ac_macro_image.storage'
@@ -40,7 +40,7 @@ class TestTranslatorAcMacroImage(Cds2mdTranslatorTestCase):
             <img href="example.png" alt="">
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_image_invalid_no_attachment(self) -> None:
         file = DATA_FOLDER / 'ac_macro_image_invalid_no_attachment.storage'
@@ -77,7 +77,7 @@ class TestTranslatorAcMacroImage(Cds2mdTranslatorTestCase):
             ![](../misc.png)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_image_url(self) -> None:
         file = DATA_FOLDER / 'ac_macro_image_url.storage'
@@ -89,4 +89,4 @@ class TestTranslatorAcMacroImage(Cds2mdTranslatorTestCase):
             ![my-alt-text](https://example.com/image.png)
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

@@ -18,7 +18,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_default_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -32,7 +32,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_docusaurus_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note.storage'
@@ -49,7 +49,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_docusaurus_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -66,7 +66,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_github_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note.storage'
@@ -82,7 +82,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_github_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -100,7 +100,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_gitlab_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note.storage'
@@ -116,7 +116,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_gitlab_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -134,7 +134,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_myst_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note.storage'
@@ -151,7 +151,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_myst_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -170,7 +170,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             :::
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_plain_no_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note.storage'
@@ -185,7 +185,7 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_ac_macro_note_plain_title(self) -> None:
         file = DATA_FOLDER / 'ac_macro_note_title.storage'
@@ -202,4 +202,4 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
             > macro-content
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

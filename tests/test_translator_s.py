@@ -14,7 +14,7 @@ class TestTranslatorS(Cds2mdTranslatorTestCase):
 
         expected = 'an <s>example</s> strikethrough'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_s_markdown(self) -> None:
         file = DATA_FOLDER / 's.storage'
@@ -24,4 +24,4 @@ class TestTranslatorS(Cds2mdTranslatorTestCase):
 
         expected = 'an ~~example~~ strikethrough'
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

@@ -21,7 +21,7 @@ class TestTranslatorPre(Cds2mdTranslatorTestCase):
             ```
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_pre_empty(self) -> None:
         file = DATA_FOLDER / 'pre-empty.storage'
@@ -47,7 +47,7 @@ class TestTranslatorPre(Cds2mdTranslatorTestCase):
             </pre>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_pre_markdown(self) -> None:
         file = DATA_FOLDER / 'pre.storage'
@@ -65,4 +65,4 @@ class TestTranslatorPre(Cds2mdTranslatorTestCase):
             ```
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

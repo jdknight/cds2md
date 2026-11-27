@@ -19,4 +19,4 @@ class TestTranslatorAcTaskList(Cds2mdTranslatorTestCase):
             - [ ] **three**
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

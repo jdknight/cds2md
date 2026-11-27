@@ -17,4 +17,4 @@ class TestTranslatorAcInlineCommentMarker(Cds2mdTranslatorTestCase):
             one **two** three
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

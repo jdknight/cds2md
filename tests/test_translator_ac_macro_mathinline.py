@@ -17,4 +17,4 @@ class TestTranslatorAcMacroMathinline(Cds2mdTranslatorTestCase):
             $E = mc^2$
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

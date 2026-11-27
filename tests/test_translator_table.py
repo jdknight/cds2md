@@ -28,7 +28,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             </table>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_inlined_tags(self) -> None:
         file = DATA_FOLDER / 'table_inlined_tags.storage'
@@ -70,7 +70,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
 
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_multiple_thead_rows(self) -> None:
         file = DATA_FOLDER / 'table_multiple_thead_rows.storage'
@@ -91,7 +91,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             </table>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_nested(self) -> None:
         file = DATA_FOLDER / 'table_nested.storage'
@@ -119,7 +119,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             </table>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_no_thead(self) -> None:
         file = DATA_FOLDER / 'table_no_thead.storage'
@@ -134,7 +134,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             | 3 | 4 |
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_simple(self) -> None:
         file = DATA_FOLDER / 'table.storage'
@@ -149,7 +149,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             | 3 | 4 |
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
 
     def test_translator_table_spans(self) -> None:
         file = DATA_FOLDER / 'table_spans.storage'
@@ -173,4 +173,4 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
             </table>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

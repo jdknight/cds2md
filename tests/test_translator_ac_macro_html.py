@@ -17,4 +17,4 @@ class TestTranslatorAcMacroHtml(Cds2mdTranslatorTestCase):
             <strong>content</strong>
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)

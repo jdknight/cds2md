@@ -25,4 +25,4 @@ class TestTranslatorDl(Cds2mdTranslatorTestCase):
             five
         ''')
 
-        self.assertIn(expected, body)
+        self.assertEqual(expected, body)
