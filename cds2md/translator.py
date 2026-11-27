@@ -127,14 +127,14 @@ class Translator:
         self.preserve_whitespace = True
 
     def visit_a(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             href = node.get('href', '')
             self.append(f'<a href="{href}">')
         else:
             self.append('[')
 
     def depart_a(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</a>')
         else:
             href = node.get('href', '')
@@ -182,7 +182,7 @@ class Translator:
         raise SkipNode
 
     def _build_image(self, href: str, alt: str) -> None:
-        if self._is_html_mode() or self.opts.tweak_html_images:
+        if self.is_html_mode() or self.opts.tweak_html_images:
             self.append(f'<img href="{href}" alt="{alt}">')
         else:
             self.append(f'![{alt}]({href})')
@@ -225,7 +225,7 @@ class Translator:
 
             raise SkipNode
 
-        if self._is_html_mode():
+        if self.is_html_mode():
             href = self._resolve_ac_link_href(node)
             self.append(f'<a href="{href}">')
         else:
@@ -249,7 +249,7 @@ class Translator:
                     self.append(cast('str', target_title))
 
     def depart_ac_link(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</a>')
         else:
             href = self._resolve_ac_link_href(node)
@@ -459,7 +459,7 @@ class Translator:
                     if jira_base:
                         jira_url = f'{jira_base}/browse/{jira_key}'
 
-                        if self._is_html_mode():
+                        if self.is_html_mode():
                             self.append(f'<a href="{jira_url}">{jira_key}</a>')
                         else:
                             self.append(f'[{jira_key}]({jira_url})')
@@ -474,19 +474,19 @@ class Translator:
                         quoted_jq = quote(jq)
                         jira_url = f'{jira_base}/issues/?jql={quoted_jq}'
 
-                        if self._is_html_mode():
+                        if self.is_html_mode():
                             self.append(f'<a href="{jira_url}">Jira Query</a>')
                         else:
                             self.append(f'[Jira Query]({jira_url})')
                     else:
-                        if self._is_html_mode():
+                        if self.is_html_mode():
                             self.append('<pre>')
                         else:
                             self.append('```jql')
                         self.newline()
                         self.append(f'{jq}')
                         self.newline()
-                        if self._is_html_mode():
+                        if self.is_html_mode():
                             self.append('</pre>')
                         else:
                             self.append('```')
@@ -519,14 +519,14 @@ class Translator:
                 if noformat_data_node:
                     noformat_data = noformat_data_node.text.strip()
 
-                if self._is_html_mode():
+                if self.is_html_mode():
                     self.append('<pre>')
                 else:
                     self.append('```')
                 self.newline()
                 self.append(f'{noformat_data}')
                 self.newline()
-                if self._is_html_mode():
+                if self.is_html_mode():
                     self.append('</pre>')
                 else:
                     self.append('```')
@@ -544,14 +544,14 @@ class Translator:
                 if plantuml_data_node:
                     plantuml_data = plantuml_data_node.text
 
-                if self._is_html_mode():
+                if self.is_html_mode():
                     self.append('<div class="plantuml">')
                 else:
                     self.append('```plantuml')
                 self.newline()
                 self.append(f'{plantuml_data}')
                 self.newline()
-                if self._is_html_mode():
+                if self.is_html_mode():
                     self.append('</div>')
                 else:
                     self.append('```')
@@ -624,13 +624,13 @@ class Translator:
     depart_ac_macro = depart_ac_structured_macro
 
     def visit_ac_task(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<li>')
         else:
             self.append('- ')
 
     def depart_ac_task(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</li>')
         else:
             self.newline()
@@ -651,11 +651,11 @@ class Translator:
         raise SkipNode
 
     def visit_ac_task_list(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<ul>')
 
     def depart_ac_task_list(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</ul>')
 
     def visit_ac_task_status(self, node: Tag) -> None:
@@ -673,7 +673,7 @@ class Translator:
         raise SkipNode
 
     def visit_br(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<br>')
         else:
             self.newline()
@@ -681,13 +681,13 @@ class Translator:
         raise SkipNode
 
     def visit_blockquote(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<blockquote>')
         else:
             self.admonition_prefix_context.append(True)
 
     def depart_blockquote(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</blockquote>')
         else:
             self.admonition_prefix_context.pop()
@@ -697,14 +697,14 @@ class Translator:
                 self.newline()
 
     def visit_code(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<code>')
         else:
             self.append(f'`{node.text}`')
             raise SkipNode
 
     def depart_code(self, node: Tag) -> None:
-        assert self._is_html_mode()
+        assert self.is_html_mode()
         self.append('</code>')
 
     def visit_colgroup(self, node: Tag) -> None:
@@ -723,38 +723,38 @@ class Translator:
         pass
 
     def visit_dd(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<dd>')
 
     def depart_dd(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</dd>')
         else:
             self.newline(count=2)
 
     def visit_dl(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<dl>')
 
     def depart_dl(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</dl>')
 
     def visit_dt(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<dt>')
         else:
             self.append('**')
 
     def depart_dt(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</dt>')
         else:
             self.append('**')
             self.newline(count=2)
 
     def visit_li(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<li>')
         else:
             # if this new li entry did not last end with a newline (e.g. a
@@ -769,97 +769,97 @@ class Translator:
             self.preserve_whitespace = False
 
     def depart_li(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</li>')
         else:
             self.newline()
 
     def visit_em(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<em>')
         else:
             self.append('*')
 
     def depart_em(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</em>')
         else:
             self.append('*')
 
     def visit_h1(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h1>')
         else:
             self.append('# ')
 
     def depart_h1(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h1>')
         else:
             self.newline(count=2)
 
     def visit_h2(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h2>')
         else:
             self.append('## ')
 
     def depart_h2(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h2>')
         else:
             self.newline(count=2)
 
     def visit_h3(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h3>')
         else:
             self.append('### ')
 
     def depart_h3(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h3>')
         else:
             self.newline(count=2)
 
     def visit_h4(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h4>')
         else:
             self.append('#### ')
 
     def depart_h4(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h4>')
         else:
             self.newline(count=2)
 
     def visit_h5(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h5>')
         else:
             self.append('##### ')
 
     def depart_h5(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h5>')
         else:
             self.newline(count=2)
 
     def visit_h6(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<h6>')
         else:
             self.append('###### ')
 
     def depart_h6(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</h6>')
         else:
             self.newline(count=2)
 
     def visit_hr(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<hr>')
         else:
             self._strip_trailing_whitespaces()
@@ -871,7 +871,7 @@ class Translator:
         raise SkipNode
 
     def visit_img(self, node: Tag) -> None:
-        if self._is_html_mode() or self.opts.tweak_html_images:
+        if self.is_html_mode() or self.opts.tweak_html_images:
             self.append(f'{node}')
         else:
             src = node.get('src', '')
@@ -880,14 +880,14 @@ class Translator:
         raise SkipNode
 
     def visit_ol(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<ol>')
         else:
             self.indent_context.append('ol')
             self.indent_offset.append(self.indent_offset[-1] + 3)
 
     def depart_ol(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</ol>')
         else:
             self.indent_context.pop()
@@ -895,11 +895,11 @@ class Translator:
             self.newline()
 
     def visit_p(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<p>')
 
     def depart_p(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</p>')
         elif self.indent_offset[-1] == 0:
             self.newline(count=2)
@@ -909,7 +909,7 @@ class Translator:
         if not content:
             raise SkipNode
 
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(f'{node}')
             raise SkipNode
 
@@ -953,13 +953,13 @@ class Translator:
         raise SkipNode
 
     def visit_s(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<s>')
         else:
             self.append('~~')
 
     def depart_s(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</s>')
         else:
             self.append('~~')
@@ -975,13 +975,13 @@ class Translator:
         pass
 
     def visit_strong(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<strong>')
         else:
             self.append('**')
 
     def depart_strong(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</strong>')
         else:
             self.append('**')
@@ -1006,7 +1006,7 @@ class Translator:
 
         # if we are already in an html table, continue this table as an html
         # formatted table
-        if self._is_html_mode():
+        if self.is_html_mode():
             html_mode = True
 
         # if we have more than one table header row, force using html format
@@ -1025,29 +1025,29 @@ class Translator:
 
         self.html_mode_context.append(html_mode)
 
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<table>')
             self.newline()
 
     def depart_table(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</table>')
 
         self.html_mode_context.pop()
         self.newline(count=2)
 
     def visit_tbody(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(' <tbody>')
             self.newline()
 
     def depart_tbody(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(' </tbody>')
             self.newline()
 
     def visit_td(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<td')
 
             colspan = node.get('colspan', '')
@@ -1067,7 +1067,7 @@ class Translator:
             self.output = ['']
 
     def depart_td(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self._strip_trailing_whitespaces()
             self.append('</td>')
         else:
@@ -1083,7 +1083,7 @@ class Translator:
                 self.append('|\n')
 
     def visit_th(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<th>')
         else:
             self.append('| ')
@@ -1093,7 +1093,7 @@ class Translator:
             self.output = ['']
 
     def depart_th(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self._strip_trailing_whitespaces()
             self.append('</th>')
         else:
@@ -1119,17 +1119,17 @@ class Translator:
                     self.append('| - ' * column_count + '|\n')
 
     def visit_thead(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(' <thead>')
             self.newline()
 
     def depart_thead(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(' </thead>')
             self.newline()
 
     def visit_time(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append(f'{node}')
         else:
             # if a time tag has a promoted time value, use it
@@ -1148,7 +1148,7 @@ class Translator:
         raise SkipNode
 
     def visit_tr(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('  <tr>')
         else:
             # if starting a row and this table never had any header entries,
@@ -1163,7 +1163,7 @@ class Translator:
                     self.append('| - ' * column_count + '|\n')
 
     def depart_tr(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</tr>')
             self.newline()
 
@@ -1174,14 +1174,14 @@ class Translator:
         self.append('</u>')
 
     def visit_ul(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('<ul>')
         else:
             self.indent_context.append('ul')
             self.indent_offset.append(self.indent_offset[-1] + 2)
 
     def depart_ul(self, node: Tag) -> None:
-        if self._is_html_mode():
+        if self.is_html_mode():
             self.append('</ul>')
         else:
             self.indent_context.pop()
@@ -1222,7 +1222,7 @@ class Translator:
     def _add_title_entry(self, node: Tag, *, newlines: bool = True) -> None:
         title_node = node.find('ac:parameter', {'ac:name': 'title'})
         if title_node:
-            if self._is_html_mode():
+            if self.is_html_mode():
                 self.append(f'<strong>{title_node.text}</strong>')
             else:
                 self.append(f'**{title_node.text}**')
@@ -1230,7 +1230,7 @@ class Translator:
             if newlines:
                 self.newline(count=2)
 
-    def _is_html_mode(self) -> bool:
+    def is_html_mode(self) -> bool:
         return self.html_mode_context[-1]
 
     def _resolve_ref(self, target: str) -> str:
