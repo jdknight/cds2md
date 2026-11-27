@@ -7,6 +7,7 @@ from bs4 import PageElement
 from bs4 import Tag
 from cds2md.defs import AdmonitionType
 from cds2md.logger import logger
+from cds2md.util import escape_markdown
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
@@ -82,7 +83,7 @@ class Translator:
         node_text = str(node)
 
         # escape text content for markdown
-        node_text = re.sub(r'([\\`*_{}\[\]()!~|])', r'\\\1', node_text)
+        node_text = escape_markdown(node_text)
 
         # reduce the wrap if we are indenting any text contents
         wrap = max(self.opts.wrap - self.indent_offset[-1], 0)
