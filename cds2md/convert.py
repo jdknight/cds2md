@@ -153,6 +153,30 @@ def convert(env: Environment, opts: Namespace) -> bool:
             attachment_full_slug = attachment_root_path.as_posix()
             attachment2target[attachment_ref] = attachment_full_slug
 
+    # compile any toctree references (if enabled)
+    toctree_refs: dict[int | str, dict[str, str]] = {}
+    if opts.sphinx_toctree:
+        for page_cache in pages_cache:
+            parent_ref = page_cache.parent_id or 'index'
+
+            title = page_cache.title
+            title_slug = slugify(title)
+            toctree_refs.setdefault(parent_ref, {})[title] = title_slug
+
+        for k, v in toctree_refs.items():
+            toctree_refs[k] = dict(sorted(v.items()))
+
+        # generation root toctree
+        opts.output.mkdir(parents=True, exist_ok=True)
+        index_path = opts.output / 'index.md'
+        with index_path.open('w') as f:
+            f.write(f'# {opts.confluence_space_key}\n\n')
+            f.write('```{toctree}\n')
+            f.write(':maxdepth: 1\n')
+            for entry in toctree_refs['index'].values():
+                f.write(f'{entry}.md\n')
+            f.write('```\n')
+
     # process each page
     ctx = TranslatorContext(
         attachment2target=attachment2target,
@@ -177,6 +201,12 @@ def convert(env: Environment, opts: Namespace) -> bool:
         # prepare a document's initial page title
         title_slug = slugify(page_cache.title)
         final_body = f'# {page_cache.title}\n\n'
+        if page_cache.id in toctree_refs:
+            final_body += '```{toctree}\n'
+            final_body += ':maxdepth: 1\n'
+            for entry in toctree_refs[page_cache.id].values():
+                final_body += f'{title_slug}/{entry}.md\n'
+            final_body += '```\n\n'
 
         # append the final markdown document contents
         final_body += ''.join(translator.output).strip() + '\n'

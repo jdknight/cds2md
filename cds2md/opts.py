@@ -171,6 +171,11 @@ cds2md
         help='path to output markdown content into',
     )
     parser.add_argument(
+        '--sphinx-toctree',
+        action='store_true',
+        help='enable sphinx toctree generation',
+    )
+    parser.add_argument(
         '--timeout',
         type=parse_positive_int,
         default=os.environ.get('CDS2MD_TIMEOUT', DEFAULT_CONNECTION_TIMEOUT),
