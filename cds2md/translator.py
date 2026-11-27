@@ -861,6 +861,9 @@ class Translator:
         if self._is_html_mode():
             self._append('<hr>')
         else:
+            self._strip_trailing_whitespaces()
+            self._newline(count=2)
+
             self._append('---')
 
         self._newline(count=2)
