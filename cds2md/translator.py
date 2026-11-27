@@ -1206,6 +1206,17 @@ class Translator:
 
         logger.debug(f'unknown depart {name} ({node.name})')
 
+    def skip(self) -> None:
+        """
+        request to skip processing an node
+
+        When translating a given node, this call can raise a skip request to
+        indicate that the node can be ignored or has been processed, and the
+        translator can be moved to the next node.
+        """
+
+        raise SkipNode
+
     def _add_title_entry(self, node: Tag, *, newlines: bool = True) -> None:
         title_node = node.find('ac:parameter', {'ac:name': 'title'})
         if title_node:
