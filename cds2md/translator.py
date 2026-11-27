@@ -447,15 +447,19 @@ class Translator:
                 raise SkipNode
 
             case 'jira':
-                jira_url = self.opts.jira_url
+                jira_base = self.opts.jira_url
 
                 key_node = node.find('ac:parameter', {'ac:name': 'key'})
                 if key_node:
                     jira_key = key_node.text
 
-                    if jira_url:
-                        self._append(f'[{jira_key}]({jira_url}'
-                                     f'/browse/{jira_key})')
+                    if jira_base:
+                        jira_url = f'{jira_base}/browse/{jira_key}'
+
+                        if self._is_html_mode():
+                            self._append(f'<a href="{jira_url}">{jira_key}</a>')
+                        else:
+                            self._append(f'[{jira_key}]({jira_url})')
                     else:
                         self._append(f'{jira_key}')
 
@@ -463,12 +467,27 @@ class Translator:
                 if jq_node:
                     jq = jq_node.text
 
-                    if jira_url:
+                    if jira_base:
                         quoted_jq = quote(jq)
-                        self._append(f'[Jira Query]({jira_url}'
-                                     f'/issues/?jql={quoted_jq})')
+                        jira_url = f'{jira_base}/issues/?jql={quoted_jq}'
+
+                        if self._is_html_mode():
+                            self._append(f'<a href="{jira_url}">Jira Query</a>')
+                        else:
+                            self._append(f'[Jira Query]({jira_url})')
                     else:
-                        self._append(f'```jql\n{jq}\n```\n\n')
+                        if self._is_html_mode():
+                            self._append('<pre>')
+                        else:
+                            self._append('```jql')
+                        self._newline()
+                        self._append(f'{jq}')
+                        self._newline()
+                        if self._is_html_mode():
+                            self._append('</pre>')
+                        else:
+                            self._append('```')
+                        self._newline(count=2)
 
                 raise SkipNode
 

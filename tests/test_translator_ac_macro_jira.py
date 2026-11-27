@@ -7,7 +7,21 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
-    def test_translator_ac_macro_jira_search_no_url(self) -> None:
+    def test_translator_ac_macro_jira_search_no_url_html(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_jira_search.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = cleandoc('''
+            <pre>
+            project = "TEST"
+            </pre>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_jira_search_no_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_search.storage'
         data = file.read_text()
 
@@ -21,7 +35,22 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
 
         self.assertIn(expected, body)
 
-    def test_translator_ac_macro_jira_search_url(self) -> None:
+    def test_translator_ac_macro_jira_search_url_html(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_jira_search.storage'
+        data = file.read_text()
+
+        opts = self.build_opts()
+        opts.jira_url = 'http://jira.example.com'
+
+        body = self.translate(data, opts=opts, force_html=True)
+
+        expected = cleandoc('''
+            <a href="http://jira.example.com/issues/?jql=project%20%3D%20%22TEST%22">Jira Query</a>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_jira_search_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_search.storage'
         data = file.read_text()
 
@@ -48,7 +77,22 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
 
         self.assertIn(expected, body)
 
-    def test_translator_ac_macro_jira_single_url(self) -> None:
+    def test_translator_ac_macro_jira_single_url_html(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_jira_single.storage'
+        data = file.read_text()
+
+        opts = self.build_opts()
+        opts.jira_url = 'https://www.example.org/tm'
+
+        body = self.translate(data, opts=opts, force_html=True)
+
+        expected = cleandoc('''
+            <a href="https://www.example.org/tm/browse/TEST-123">TEST-123</a>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_jira_single_url_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_jira_single.storage'
         data = file.read_text()
 
