@@ -195,20 +195,7 @@ cds2md
 
     opts = parser.parse_args(args)
 
-    # post-processing arguments
-    if not opts.confluence_url:
-        # if not arguments were provided, do a full help output
-        if len(sys.argv) <= 1:
-            parser.print_help()
-            raise SystemExit(1)
-
-        msg = 'confluence url is not configured'
-        raise SystemExit(msg)
-
-    if not opts.confluence_space_key:
-        msg = 'confluence space key is not configured'
-        raise SystemExit(msg)
-
+    # post-processing arguments (defaults)
     if not opts.confluence_token:
         if opts.confluence_token_file:
             content = opts.confluence_token_file.read_text(encoding='utf-8')
@@ -217,10 +204,6 @@ cds2md
             for line in sys.stdin:
                 if line.strip():
                     opts.confluence_token = line.strip()
-
-    if not opts.confluence_token:
-        msg = 'confluence token is not configured'
-        raise SystemExit(msg)
 
     # merge all header entries into a single dictionary
     if opts.header:
@@ -243,6 +226,24 @@ cds2md
         httpx_handler.setFormatter(logging.Formatter('(httpx) %(message)s'))
         httpx_handler.setLevel(logging.DEBUG)
         httpx_logger.addHandler(httpx_handler)
+
+    # post-processing arguments (final checks)
+    if not opts.confluence_url:
+        # if not arguments were provided, do a full help output
+        if len(sys.argv) <= 1:
+            parser.print_help()
+            raise SystemExit(1)
+
+        msg = 'confluence url is not configured'
+        raise SystemExit(msg)
+
+    if not opts.confluence_space_key:
+        msg = 'confluence space key is not configured'
+        raise SystemExit(msg)
+
+    if not opts.confluence_token:
+        msg = 'confluence token is not configured'
+        raise SystemExit(msg)
 
     # hint that api endpoint does not end with the standard api path
     if 'CDS2MD_IGNORE_URL_API_SUFFIX_CHECK' not in os.environ:
