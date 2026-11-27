@@ -541,7 +541,18 @@ class Translator:
                 if plantuml_data_node:
                     plantuml_data = plantuml_data_node.text
 
-                self._append(f'```plantuml\n{plantuml_data}\n```\n\n')
+                if self._is_html_mode():
+                    self._append('<div class="plantuml">')
+                else:
+                    self._append('```plantuml')
+                self._newline()
+                self._append(f'{plantuml_data}')
+                self._newline()
+                if self._is_html_mode():
+                    self._append('</div>')
+                else:
+                    self._append('```')
+                self._newline(count=2)
                 raise SkipNode
 
             case 'status':

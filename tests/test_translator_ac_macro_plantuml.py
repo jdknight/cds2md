@@ -7,7 +7,24 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorAcMacroPlantuml(Cds2mdTranslatorTestCase):
-    def test_translator_ac_macro_plantuml(self) -> None:
+    def test_translator_ac_macro_plantuml_html(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_plantuml.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = cleandoc('''
+            <div class="plantuml">
+            @startuml
+            Alice -> Bob: Hello
+            Bob --> Alice: Hi there!
+            @enduml
+            </div>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_plantuml_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_plantuml.storage'
         data = file.read_text()
 
