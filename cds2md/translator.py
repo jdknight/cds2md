@@ -28,7 +28,7 @@ class TranslatorContext:
 
 class Translator:
     def __init__(self, ctx: TranslatorContext, title: str) -> None:
-        self.output = []
+        self.output: list[str] = []
 
         self.admonition_prefix_context = [False]
         self.admonition_prefix_pending = False
