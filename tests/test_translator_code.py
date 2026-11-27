@@ -6,7 +6,17 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorCode(Cds2mdTranslatorTestCase):
-    def test_translator_code(self) -> None:
+    def test_translator_code_html(self) -> None:
+        file = DATA_FOLDER / 'code.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = 'my <code>test</code> example'
+
+        self.assertIn(expected, body)
+
+    def test_translator_code_markdown(self) -> None:
         file = DATA_FOLDER / 'code.storage'
         data = file.read_text()
 

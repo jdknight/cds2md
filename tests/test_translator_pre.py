@@ -7,7 +7,25 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorPre(Cds2mdTranslatorTestCase):
-    def test_translator_pre(self) -> None:
+    def test_translator_pre_html(self) -> None:
+        file = DATA_FOLDER / 'pre.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = cleandoc('''
+            <pre>
+            this
+                is
+                    an
+            pre
+                    example
+            </pre>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_pre_markdown(self) -> None:
         file = DATA_FOLDER / 'pre.storage'
         data = file.read_text()
 

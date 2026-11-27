@@ -7,7 +7,19 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorAcMacroStatus(Cds2mdTranslatorTestCase):
-    def test_translator_ac_macro_status(self) -> None:
+    def test_translator_ac_macro_status_html(self) -> None:
+        file = DATA_FOLDER / 'ac_macro_status.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = cleandoc('''
+            <strong>COMPLETED</strong>
+        ''')
+
+        self.assertIn(expected, body)
+
+    def test_translator_ac_macro_status_markdown(self) -> None:
         file = DATA_FOLDER / 'ac_macro_status.storage'
         data = file.read_text()
 

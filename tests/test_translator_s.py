@@ -6,7 +6,17 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorS(Cds2mdTranslatorTestCase):
-    def test_translator_s(self) -> None:
+    def test_translator_s_html(self) -> None:
+        file = DATA_FOLDER / 's.storage'
+        data = file.read_text()
+
+        body = self.translate(data, force_html=True)
+
+        expected = 'an <s>example</s> strikethrough'
+
+        self.assertIn(expected, body)
+
+    def test_translator_s_markdown(self) -> None:
         file = DATA_FOLDER / 's.storage'
         data = file.read_text()
 
