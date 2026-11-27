@@ -349,10 +349,7 @@ class Translator:
                 pass
 
             case 'code':
-                title_node = node.find('ac:parameter', {'ac:name': 'title'})
-                if title_node:
-                    self._append(f'**{title_node.text}**')
-                    self._newline(count=2)
+                self._add_title_entry(node)
 
                 code_language = ''
                 lang_node = node.find('ac:parameter', {'ac:name': 'language'})
@@ -515,16 +512,10 @@ class Translator:
                 raise SkipNode
 
             case 'panel':
-                title_node = node.find('ac:parameter', {'ac:name': 'title'})
-                if title_node:
-                    self._append(f'**{title_node.text}**')
-                    self._newline(count=2)
+                self._add_title_entry(node)
 
             case 'plantuml':
-                title_node = node.find('ac:parameter', {'ac:name': 'title'})
-                if title_node:
-                    self._append(f'**{title_node.text}**')
-                    self._newline(count=2)
+                self._add_title_entry(node)
 
                 plantuml_data = ''
                 plantuml_data_node = node.find('ac:plain-text-body')
@@ -535,9 +526,7 @@ class Translator:
                 raise SkipNode
 
             case 'status':
-                title_node = node.find('ac:parameter', {'ac:name': 'title'})
-                if title_node:
-                    self._append(f'**{title_node.text}**')
+                self._add_title_entry(node, newlines=False)
                 raise SkipNode
 
             # unsupported macros (no content skip)
@@ -1149,6 +1138,14 @@ class Translator:
             raise SystemExit
 
         logger.debug(f'unknown depart {name} ({node.name})')
+
+    def _add_title_entry(self, node: Tag, *, newlines: bool = True) -> None:
+        title_node = node.find('ac:parameter', {'ac:name': 'title'})
+        if title_node:
+            self._append(f'**{title_node.text}**')
+
+            if newlines:
+                self._newline(count=2)
 
     def _is_html_mode(self) -> bool:
         return self.html_mode_context[-1]
