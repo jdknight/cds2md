@@ -15,8 +15,6 @@ class TestTranslatorAcMacroNote(Cds2mdTranslatorTestCase):
         body = self.translate(data)
 
         expected = cleandoc('''
-            # unit-test
-
             > macro-content
         ''')
 

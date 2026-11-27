@@ -174,8 +174,12 @@ def convert(opts: Namespace) -> bool:
         logger.debug(f'walking page: {doc_path}')
         translator.walk(soup)
 
-        # build the final markdown document contents
-        final_body = ''.join(translator.output).strip() + '\n'
+        # prepare a document's initial page title
+        title_slug = slugify(page_cache.title)
+        final_body = f'# {page_cache.title}\n\n'
+
+        # append the final markdown document contents
+        final_body += ''.join(translator.output).strip() + '\n'
 
         # write the markdown content to its output file
         assert page_cache.target_path

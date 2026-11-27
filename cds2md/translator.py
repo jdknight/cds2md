@@ -27,11 +27,7 @@ class TranslatorContext:
 
 class Translator:
     def __init__(self, ctx: TranslatorContext, title: str) -> None:
-        self.output = [
-            # always lead new documents with their title name, which is
-            # pulled from Confluence's metadata and not in a page's body
-            f'# {title}\n\n',
-        ]
+        self.output = []
 
         self.admonition_prefix_context = [False]
         self.admonition_prefix_pending = False
@@ -120,8 +116,7 @@ class Translator:
         # check if we should indent this text content
         indent = ' ' * self.indent_offset[-1]
         if indent and node.strip():
-            last_ends_with_nl = self.output[-1].endswith('\n')
-            if last_ends_with_nl:
+            if self._last_ends_with_nl():
                 node_text = f'{indent}{node_text}'
             node_text = f'\n{indent}'.join(node_text.splitlines())
 
@@ -756,8 +751,7 @@ class Translator:
         else:
             # if this new li entry did not last end with a newline (e.g. a
             # nested sub-list), add one now
-            last_ends_with_nl = self.output[-1].endswith('\n')
-            if not last_ends_with_nl:
+            if not self._last_ends_with_nl():
                 self._newline()
 
             indent = '-' if self.indent_context[-1] == 'ul' else '1.'
@@ -1241,14 +1235,12 @@ class Translator:
             self._append('\n')
 
     def _append(self, value: str) -> None:
-        last_ends_with_nl = self.output[-1].endswith('\n')
-
         # If starting a new line for an admonition, we will be populating an
         # "> VALUE" for the entry. If the text being processed now is an empty
         # newline, we only want a ">" marking. However, we want to track that
         # this output is pending another admonition line since if we do not
         # eventually add a new line, we will want to pop/drop the setup ">".
-        if self.admonition_prefix_context[-1] and last_ends_with_nl:
+        if self.admonition_prefix_context[-1] and self._last_ends_with_nl():
             self.admonition_prefix_pending = bool(value) and value == '\n'
             if value == '\n':
                 self.output.append('>\n')
@@ -1258,8 +1250,11 @@ class Translator:
             self.admonition_prefix_pending = False
             self.output.append(value)
 
+    def _last_ends_with_nl(self) -> bool:
+        return not bool(self.output) or self.output[-1].endswith('\n')
+
     def _strip_trailing_whitespaces(self) -> None:
-        while not self.output[-1].strip():
+        while self.output and not self.output[-1].strip():
             self.output.pop()
 
 
