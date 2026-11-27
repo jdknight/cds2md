@@ -44,8 +44,9 @@ class TestTranslatorAcMacroJira(Cds2mdTranslatorTestCase):
 
         body = self.translate(data, opts=opts, force_html=True)
 
-        expected = cleandoc('''
-            <a href="http://jira.example.com/issues/?jql=project%20%3D%20%22TEST%22">Jira Query</a>
+        expected_url = f'{opts.jira_url}/issues/?jql=project%20%3D%20%22TEST%22'
+        expected = cleandoc(f'''
+            <a href="{expected_url}">Jira Query</a>
         ''')
 
         self.assertIn(expected, body)
