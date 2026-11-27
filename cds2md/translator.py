@@ -1003,8 +1003,13 @@ class Translator:
         if thead_node and len(thead_node.find_all('tr')) > 1:
             html_mode = True
 
-        # if we have a nested table, force html format
-        if node.find('table'):
+        # force an html format if:
+        if node.find([
+                # we have any lists
+                'li',
+                # we have a nested table
+                'table',
+            ]):
             html_mode = True
 
         self.html_mode_context.append(html_mode)
