@@ -18,7 +18,7 @@ class TestTranslatorAcLinkUser(Cds2mdTranslatorTestCase):
         body = self.translate(data, userid2name=userid2name)
 
         expected = cleandoc('''
-            my-name
+            @my-name
         ''')
 
         self.assertIn(expected, body)
