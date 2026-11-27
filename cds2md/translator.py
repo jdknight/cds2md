@@ -588,7 +588,7 @@ class Translator:
                 'toc',
                 'view-file',
             }:
-                self._strip_trailing_whitespaces()
+                self.strip_trailing_whitespaces()
                 logger.debug(f'ignored unsupported macro {macro_type}')
                 raise SkipNode
 
@@ -862,7 +862,7 @@ class Translator:
         if self.is_html_mode():
             self.append('<hr>')
         else:
-            self._strip_trailing_whitespaces()
+            self.strip_trailing_whitespaces()
             self.newline(count=2)
 
             self.append('---')
@@ -940,7 +940,7 @@ class Translator:
             self.append(f'{line}')
             self.newline()
 
-        self._strip_trailing_whitespaces()
+        self.strip_trailing_whitespaces()
         self.newline()
         self.append('```')
         self.newline(count=2)
@@ -1068,7 +1068,7 @@ class Translator:
 
     def depart_td(self, node: Tag) -> None:
         if self.is_html_mode():
-            self._strip_trailing_whitespaces()
+            self.strip_trailing_whitespaces()
             self.append('</td>')
         else:
             # group all captured content and restore output capture
@@ -1094,7 +1094,7 @@ class Translator:
 
     def depart_th(self, node: Tag) -> None:
         if self.is_html_mode():
-            self._strip_trailing_whitespaces()
+            self.strip_trailing_whitespaces()
             self.append('</th>')
         else:
             # group all captured content and restore output capture
@@ -1282,7 +1282,7 @@ class Translator:
     def last_ends_with_nl(self) -> bool:
         return not bool(self.output) or self.output[-1].endswith('\n')
 
-    def _strip_trailing_whitespaces(self) -> None:
+    def strip_trailing_whitespaces(self) -> None:
         while self.output and not self.output[-1].strip():
             self.output.pop()
 
