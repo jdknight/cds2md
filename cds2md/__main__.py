@@ -2,6 +2,7 @@
 # Copyright jdknight
 
 from cds2md.engine import engine
+from cds2md.env import Environment
 from cds2md.logger import logger
 from cds2md.opts import process_options
 
@@ -14,7 +15,8 @@ def main() -> None:
     """
 
     # process command line/environment options
-    opts = process_options()
+    env = Environment()
+    opts = process_options(env=env)
 
     # if running a debugging, output the configuration used
     if opts.debug:
@@ -35,7 +37,7 @@ def main() -> None:
         logger.debug(f'configuration: {debug_opts}')
 
     # run the utility
-    engine(opts)
+    engine(env, opts)
 
 
 if __name__ == '__main__':

@@ -5,8 +5,8 @@ from argparse import Namespace
 from bs4 import BeautifulSoup
 from cds2md.cache import cache_key
 from cds2md.defs import CACHE_DB
+from cds2md.env import Environment
 from cds2md.logger import logger
-from cds2md.translator import Translator
 from cds2md.translator import TranslatorContext
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,7 +34,7 @@ class PageCache:
     target_path: Path | None = None
 
 
-def convert(opts: Namespace) -> bool:
+def convert(env: Environment, opts: Namespace) -> bool:
     # ensure cache directory is prepared
     cache_dir = opts.cache / cache_key(opts)
     cache_db = cache_dir / CACHE_DB
@@ -170,7 +170,7 @@ def convert(opts: Namespace) -> bool:
         soup = BeautifulSoup(page_cache.body, 'html.parser')
 
         # translate the parsed content into a markdown output
-        translator = Translator(ctx, page_cache.title)
+        translator = env.translator_cls(ctx, page_cache.title)
         logger.debug(f'walking page: {doc_path}')
         translator.walk(soup)
 

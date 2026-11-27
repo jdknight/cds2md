@@ -5,6 +5,7 @@ from argparse import Namespace
 from cds2md import __version__ as cds2md_version
 from cds2md.defs import Action
 from cds2md.convert import convert
+from cds2md.env import Environment
 from cds2md.fetch import fetch
 from cds2md.logger import logger
 from cds2md.validate_connection import validate_connection
@@ -13,14 +14,14 @@ import httpx
 import ssl
 
 
-def engine(opts: Namespace) -> None:
+def engine(env: Environment, opts: Namespace) -> None:
     # perform any action requiring remote work
     if opts.action in [Action.ALL, Action.CONNECTION_CHECK, Action.FETCH]:
         perform_web_action(opts)
 
     # perform process action
     if opts.action in [Action.ALL, Action.PROCESS]:
-        process(opts)
+        process(env, opts)
 
 
 def perform_web_action(opts: Namespace) -> None:
@@ -94,10 +95,10 @@ def fetch_attempt(opts: Namespace, client: httpx.Client) -> None:
         raise SystemExit(5)
 
 
-def process(opts: Namespace) -> None:
+def process(env: Environment, opts: Namespace) -> None:
     logger.info('converting cached data into markdown files')
 
-    if not convert(opts):
+    if not convert(env, opts):
         raise SystemExit(3)
 
     logger.info('conversion completed')

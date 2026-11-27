@@ -20,9 +20,10 @@ __pycache__/
 .venv
 !.coveragerc
 
-# utility output
+# utility configuration/output
 .cds2md-cache*/
 output*/
+conf.py
 
 # other
 /.idea/

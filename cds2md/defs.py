@@ -10,6 +10,9 @@ CACHE_DB = 'cache.json'
 # name of the cache directory
 CACHE_DIRNAME = '.cds2md-cache'
 
+# name of the configuration file
+CFG_NAME = 'conf.py'
+
 
 class Action(StrEnum):
     ALL = 'all'

@@ -9,8 +9,11 @@ from cds2md import __version__ as cds2md_version
 from cds2md.defs import Action
 from cds2md.defs import AdmonitionType
 from cds2md.defs import CACHE_DIRNAME
+from cds2md.defs import CFG_NAME
+from cds2md.env import Environment
 from cds2md.logger import logger
 from cds2md.logger import logger_handler
+from cds2md.settings import load_settings
 from collections.abc import Sequence
 from pathlib import Path
 from urllib.parse import urlparse
@@ -26,7 +29,10 @@ DEFAULT_CONNECTION_TIMEOUT = 5.0
 DEFAULT_WRAP = 80
 
 
-def process_options(args: Sequence[str] | None = None) -> Namespace:
+def process_options(
+        args: Sequence[str] | None = None,
+        env: Environment | None = None,
+    ) -> Namespace:
     """
     process program options
 
@@ -83,6 +89,11 @@ cds2md
         type=parse_non_file_path,
         default=Path(CACHE_DIRNAME),
         help='path to store fetch cached data',
+    )
+    parser.add_argument(
+        '--conf', '-C',
+        type=parse_file_check,
+        help='configuration file to load',
     )
     parser.add_argument(
         '--confluence-space-key',
@@ -226,6 +237,15 @@ cds2md
         httpx_handler.setFormatter(logging.Formatter('(httpx) %(message)s'))
         httpx_handler.setLevel(logging.DEBUG)
         httpx_logger.addHandler(httpx_handler)
+
+    # load any file settings
+    if env:
+        cfg_file = opts.conf
+        if not cfg_file:
+            cfg_file = Path(CFG_NAME)
+
+        if cfg_file.is_file():
+            load_settings(env, Path(CFG_NAME))
 
     # post-processing arguments (final checks)
     if not opts.confluence_url:
