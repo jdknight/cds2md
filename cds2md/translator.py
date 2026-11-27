@@ -1132,13 +1132,15 @@ class Translator:
         if self._is_html_mode():
             self.append(f'{node}')
         else:
+            # if a time tag has a promoted time value, use it
             time_display = node.text.strip()
 
-            suffix = node.get('datetime', '')
             if time_display:
-                suffix = f' ({suffix})'
+                self.append(time_display)
+                raise SkipNode
 
-            time_display += f'{suffix}'
+            # if not, try to take the explicit datetime value in the time tag
+            time_display = cast('str', node.get('datetime', ''))
 
             if time_display:
                 self.append(time_display)
