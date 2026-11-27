@@ -64,6 +64,7 @@ options:
   --ca-certificate CA_CERTIFICATE
                         ca certificate to use when communicating with Confluence
   --cache CACHE         path to store fetch cached data
+  --conf, -C CONF       configuration file to load
   --confluence-space-key CONFLUENCE_SPACE_KEY
                         space to query for pages
   --confluence-token CONFLUENCE_TOKEN
@@ -83,6 +84,7 @@ options:
   --ignore-tls          ignore all TLS checks when communicating with Confluence
   --jira-url JIRA_URL   base url to use for any jira links
   --output OUTPUT       path to output markdown content into
+  --sphinx-toctree      enable sphinx toctree generation
   --timeout TIMEOUT     timeout for connection REST requests to Confluence
   --tweak-admonition-type {default,docusaurus,github,gitlab,myst,plain}
                         admonition formatting to use (default: default)
