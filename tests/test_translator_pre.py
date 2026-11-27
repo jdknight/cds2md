@@ -7,6 +7,22 @@ from tests import Cds2mdTranslatorTestCase
 
 
 class TestTranslatorPre(Cds2mdTranslatorTestCase):
+    def test_translator_pre_br(self) -> None:
+        file = DATA_FOLDER / 'pre-br.storage'
+        data = file.read_text()
+
+        body = self.translate(data)
+
+        expected = cleandoc('''
+            ```
+            this
+                is
+            multiline
+            ```
+        ''')
+
+        self.assertIn(expected, body)
+
     def test_translator_pre_empty(self) -> None:
         file = DATA_FOLDER / 'pre-empty.storage'
         data = file.read_text()

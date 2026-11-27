@@ -910,7 +910,32 @@ class Translator:
 
         self._append('```')
         self._newline()
-        self._append(f'{content}')
+
+        # some older confluence output may use br tags to trigger newline hints;
+        # if so, we will focus on using br tags as the newline markers over
+        # regular newlines
+        has_br = node.find('br')
+        normalized_content = ''
+
+        # process the content to generate a newline normalized tag data
+        for child in node.descendants:
+            if isinstance(child, Tag) and child.name == 'br':
+                normalized_content += '\n'
+            elif isinstance(child, NavigableString):
+                for line in child.text.splitlines():
+                    normalized_content += line
+                    if not has_br:
+                        normalized_content += '\n'
+
+        # strip any leading/trailing whitespaces
+        normalized_content = normalized_content.strip()
+
+        # take normalizes lines and append/newline inject (to handled nested)
+        for line in normalized_content.splitlines():
+            self._append(f'{line}')
+            self._newline()
+
+        self._strip_trailing_whitespaces()
         self._newline()
         self._append('```')
         self._newline(count=2)
