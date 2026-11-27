@@ -1142,7 +1142,10 @@ class Translator:
     def _add_title_entry(self, node: Tag, *, newlines: bool = True) -> None:
         title_node = node.find('ac:parameter', {'ac:name': 'title'})
         if title_node:
-            self._append(f'**{title_node.text}**')
+            if self._is_html_mode():
+                self._append(f'<strong>{title_node.text}</strong>')
+            else:
+                self._append(f'**{title_node.text}**')
 
             if newlines:
                 self._newline(count=2)
