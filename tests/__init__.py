@@ -129,7 +129,9 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
     """
 
     def translate(self, data: str,
+            *,
             attachment2target: dict | None = None,
+            force_html: bool = False,
             opts: Namespace | None = None,
             title2target: dict | None = None,
             userid2name: dict | None = None,
@@ -150,6 +152,8 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
             )
 
         translator = Translator(ctx, 'unit-test')
+        if force_html:
+            translator.html_mode_context = [True]
         translator.walk(soup)
 
         return ''.join(translator.output).strip()
