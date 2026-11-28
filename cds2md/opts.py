@@ -8,6 +8,7 @@ from argparse import RawDescriptionHelpFormatter
 from cds2md import __version__ as cds2md_version
 from cds2md.defs import Action
 from cds2md.defs import AdmonitionType
+from cds2md.defs import AnchorType
 from cds2md.defs import CACHE_DIRNAME
 from cds2md.defs import CFG_NAME
 from cds2md.env import Environment
@@ -191,6 +192,17 @@ cds2md
         choices=[at.value for at in AdmonitionType],
         default=AdmonitionType.DEFAULT,
         help='admonition formatting to use (default: %(default)s)',
+    )
+    parser.add_argument(
+        '--tweak-anchor-all',
+        action='store_true',
+        help='force add all anchor entries',
+    )
+    parser.add_argument(
+        '--tweak-anchor-type',
+        choices=[at.value for at in AnchorType],
+        default=AnchorType.DEFAULT,
+        help='anchor formatting to use (default: %(default)s)',
     )
     parser.add_argument(
         '--tweak-html-images',

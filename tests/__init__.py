@@ -130,6 +130,7 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
 
     def translate(self, data: str,
             *,
+            anchor_ids: dict | None = None,
             attachment2target: dict | None = None,
             force_html: bool = False,
             jira2summary: dict | None = None,
@@ -145,6 +146,7 @@ class Cds2mdTranslatorTestCase(Cds2mdTestCase):
                 opts = self.build_opts()
 
             ctx = TranslatorContext(
+                anchor_ids=anchor_ids or {},
                 attachment2target=attachment2target or {},
                 jira2summary=jira2summary or {},
                 opts=opts,

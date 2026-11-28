@@ -11,6 +11,7 @@ from cds2md.translator import TranslatorContext
 from dataclasses import dataclass
 from pathlib import Path
 from slugify import slugify
+from typing import cast
 import json
 import shutil
 
@@ -93,6 +94,7 @@ def convert(env: Environment, opts: Namespace) -> bool:
                 pages_cache.append(page_cache)
 
     # determine the paths for each page cache to be stored
+    anchor_ids: dict[str, set[str]] = {}
     attachment2target: dict[tuple[str, str], str] = {}
     title2target: dict[str, str] = {}
     reserved_attachment_targets = set()
@@ -155,6 +157,24 @@ def convert(env: Environment, opts: Namespace) -> bool:
             attachment_full_slug = attachment_root_path.as_posix()
             attachment2target[attachment_ref] = attachment_full_slug
 
+    # pre-parse page data
+    for page_cache in pages_cache:
+        soup = BeautifulSoup(page_cache.body, 'html.parser')
+
+        # grab all target anchors to compile anchors we can filter
+        for node in soup.find_all('ac:link', {'ac:anchor': True}):
+            anchor_target = cast('str', node.get('ac:anchor')).strip()
+            if anchor_target:
+                page_ref_node = node.find('ri:page', recursive=False)
+                if page_ref_node:
+                    target_title = page_ref_node.get('ri:content-title')
+                else:
+                    target_title = page_cache.title
+
+                if target_title in title2target:
+                    slug = cast('str', title2target.get(target_title))
+                    anchor_ids.setdefault(slug, set()).add(anchor_target)
+
     # compile any toctree references (if enabled)
     toctree_refs: dict[int | str, dict[str, str]] = {}
     if opts.sphinx_toctree:
@@ -181,6 +201,7 @@ def convert(env: Environment, opts: Namespace) -> bool:
 
     # process each page
     ctx = TranslatorContext(
+        anchor_ids=anchor_ids,
         attachment2target=attachment2target,
         jira2summary=jira2summary,
         opts=opts,

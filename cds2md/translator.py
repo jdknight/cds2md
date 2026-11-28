@@ -6,6 +6,7 @@ from bs4 import NavigableString
 from bs4 import PageElement
 from bs4 import Tag
 from cds2md.defs import AdmonitionType
+from cds2md.defs import AnchorType
 from cds2md.logger import logger
 from cds2md.util import escape_markdown
 from dataclasses import dataclass
@@ -20,6 +21,7 @@ import textwrap
 
 @dataclass
 class TranslatorContext:
+    anchor_ids: dict
     attachment2target: dict
     jira2summary: dict
     opts: Namespace
@@ -34,6 +36,9 @@ class Translator:
         self.admonition_prefix_context = [False]
         self.admonition_prefix_pending = False
         self.admonition_type = ctx.opts.tweak_admonition_type
+        self.anchor_forced = ctx.opts.tweak_anchor_all
+        self.anchor_ids = ctx.anchor_ids
+        self.anchor_type = ctx.opts.tweak_anchor_type
         self.attachment2target = ctx.attachment2target
         self.html_mode_context = [False]
         self.indent_context: list[str] = []
@@ -287,7 +292,13 @@ class Translator:
         return self._resolve_ref(attachment_ref)
 
     def _depart_ac_link_anchor(self, node: Tag) -> str:
-        return cast('str', node.get('ac:anchor', '#'))
+        base_url = ''
+
+        if node.find('ri:page', recursive=False):
+            base_url = self._depart_ac_link_page(node)
+
+        raw_anchor = node.get('ac:anchor', '#')
+        return f'{base_url}#{raw_anchor}'
 
     def _depart_ac_link_page(self, node: Tag) -> str:
         page_ref_node = node.find('ri:page', recursive=False)
@@ -297,7 +308,7 @@ class Translator:
         return self._resolve_ref(page_slug)
 
     def _resolve_ac_link_href(self, node: Tag) -> str:
-        if 'ac:anchor' in node:
+        if node.get('ac:anchor'):
             href = self._depart_ac_link_anchor(node)
         elif node.find('ri:page', recursive=False):
             href = self._depart_ac_link_page(node)
@@ -337,17 +348,7 @@ class Translator:
 
         match macro_type:
             case 'anchor':
-                anchor_id = None
-                parameter_node = node.find('ac:parameter')
-                if parameter_node:
-                    anchor_id = parameter_node.text
-
-                if anchor_id:
-                    # not (yet?) implemented
-                    logger.debug(f'ignoring anchor: {anchor_id}')
-                else:
-                    logger.warning('ignored empty anchor')
-
+                self._process_anchor(node)
                 raise SkipNode
 
             case 'chart':
@@ -793,6 +794,8 @@ class Translator:
             self.append('*')
 
     def visit_h1(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h1>')
         else:
@@ -805,6 +808,8 @@ class Translator:
             self.newline(count=2)
 
     def visit_h2(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h2>')
         else:
@@ -817,6 +822,8 @@ class Translator:
             self.newline(count=2)
 
     def visit_h3(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h3>')
         else:
@@ -829,6 +836,8 @@ class Translator:
             self.newline(count=2)
 
     def visit_h4(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h4>')
         else:
@@ -841,6 +850,8 @@ class Translator:
             self.newline(count=2)
 
     def visit_h5(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h5>')
         else:
@@ -853,6 +864,8 @@ class Translator:
             self.newline(count=2)
 
     def visit_h6(self, node: Tag) -> None:
+        self._process_header_anchors(node)
+
         if self.is_html_mode():
             self.append('<h6>')
         else:
@@ -863,6 +876,15 @@ class Translator:
             self.append('</h6>')
         else:
             self.newline(count=2)
+
+    def _process_header_anchors(self, node: Tag) -> None:
+        # find all anchors residing in the headers
+        for o in node.find_all('ac:structured-macro', {'ac:name': 'anchor'}):
+            self._process_anchor(o)
+            o.decompose()
+
+        if not self.is_html_mode() and not self.last_ends_with_nl():
+            self.newline()
 
     def visit_hr(self, node: Tag) -> None:
         if self.is_html_mode():
@@ -1025,6 +1047,10 @@ class Translator:
         td_span = node.select_one(
             'td[colspan]:not([colspan="1"]), td[rowspan]:not([rowspan="1"])')
         if td_span:
+            html_mode = True
+
+        # if we any anchors, force using html format
+        if node.find('ac:structured-macro', {'ac:name': 'anchor'}):
             html_mode = True
 
         # force an html format if:
@@ -1266,6 +1292,30 @@ class Translator:
                      f'{target_path.as_posix()} : {ref.as_posix()}')
 
         return ref.as_posix()
+
+    def _process_anchor(self, node: Tag) -> None:
+        anchor_id = None
+        parameter_node = node.find('ac:parameter')
+        if parameter_node:
+            anchor_id = parameter_node.text
+
+        if anchor_id:
+            page_slug = self.title2target.get(self.title)
+            page_anchors = self.anchor_ids.get(page_slug, set())
+            if anchor_id in page_anchors or self.anchor_forced:
+                if self.anchor_type == AnchorType.MYST and \
+                        not self.is_html_mode():
+                    if not self.last_ends_with_nl():
+                        self.newline()
+
+                    self.append(f'({anchor_id})=')
+                    self.newline()
+                else:
+                    self.append(f'<span id="{anchor_id}"></span>')
+            else:
+                logger.debug(f'ignored unused anchor: {anchor_id}')
+        else:
+            logger.debug('ignored empty anchor')
 
     def newline(self, count: int = 1) -> None:
         # if starting a newline, ensure our last block does not have any

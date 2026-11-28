@@ -1,0 +1,15 @@
+<p>
+    <ac:structured-macro ac:name="anchor">
+        <ac:parameter ac:name="">myref</ac:parameter>
+    </ac:structured-macro>
+</p>
+<p>
+    <ac:link ac:anchor="myref">
+        <ac:link-body>[CITREF1]</ac:link-body>
+    </ac:link>
+</p>
+<p>
+    <ac:link ac:anchor="myref">
+        <ac:plain-text-link-body><![CDATA[[CITREF2]]]></ac:plain-text-link-body>
+    </ac:link>
+</p>

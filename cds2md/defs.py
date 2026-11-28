@@ -28,3 +28,9 @@ class AdmonitionType(StrEnum):
     GITLAB = 'gitlab'
     MYST  = 'myst'
     PLAIN = 'plain'
+
+
+class AnchorType(StrEnum):
+    DEFAULT = 'default'
+    HTML = 'html'
+    MYST  = 'myst'
