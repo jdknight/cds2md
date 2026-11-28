@@ -155,10 +155,7 @@ class TestTranslatorTable(Cds2mdTranslatorTestCase):
         file = DATA_FOLDER / 'table_spans.storage'
         data = file.read_text()
 
-        opts = self.build_opts()
-        opts.tweak_html_tables = True
-
-        body = self.translate(data, opts=opts)
+        body = self.translate(data)
 
         expected = cleandoc('''
             <table>

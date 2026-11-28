@@ -1020,6 +1020,12 @@ class Translator:
         if thead_node and len(thead_node.find_all('tr')) > 1:
             html_mode = True
 
+        # if we a td element that spans columns or rows, force using html format
+        td_span = node.select_one(
+            'td[colspan]:not([colspan="1"]), td[rowspan]:not([rowspan="1"])')
+        if td_span:
+            html_mode = True
+
         # force an html format if:
         if node.find([
                 # we have any lists
