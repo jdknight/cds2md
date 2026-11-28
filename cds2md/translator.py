@@ -907,6 +907,7 @@ class Translator:
     def depart_p(self, node: Tag) -> None:
         if self.is_html_mode():
             self.append('</p>')
+            self.newline()
         elif self.indent_offset[-1] == 0:
             self.newline(count=2)
 
