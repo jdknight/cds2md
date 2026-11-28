@@ -138,6 +138,11 @@ cds2md
         help='configure to operate in a development state',
     )
     parser.add_argument(
+        '--enable-jira-api-features',
+        action='store_true',
+        help='enable features that query jira api for content',
+    )
+    parser.add_argument(
         '--header',
         '-H',
         type=parse_http_headers,
@@ -153,11 +158,6 @@ cds2md
         '--ignore-cache',
         action='store_true',
         help='ignore any cached content',
-    )
-    parser.add_argument(
-        '--ignore-jira-api-features',
-        action='store_true',
-        help='ignore attempts to query jira api for content',
     )
     parser.add_argument(
         '--ignore-tls',

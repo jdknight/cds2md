@@ -237,7 +237,7 @@ confluence-space-key: {opts.confluence_space_key}
         }
 
     # fetch summaries for any referenced jira entry
-    if not opts.ignore_jira_api_features:
+    if opts.enable_jira_api_features:
         for jira_key in state.detected_jira_summaries:
             summary = fetch_jira_summary(state, jira_key)
             cache_db_state['jiras'][jira_key] = summary
