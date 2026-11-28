@@ -143,16 +143,16 @@ cds2md
         help='enable features that query jira api for content',
     )
     parser.add_argument(
+        '--flat',
+        action='store_true',
+        help='ignore any Confluence-detected hierarchy structure',
+    )
+    parser.add_argument(
         '--header',
         '-H',
         type=parse_http_headers,
         action='append',
         help='http headers to include in requests',
-    )
-    parser.add_argument(
-        '--flat',
-        action='store_true',
-        help='ignore any Confluence-detected hierarchy structure',
     )
     parser.add_argument(
         '--ignore-cache',
