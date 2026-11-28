@@ -47,6 +47,7 @@ class Translator:
         self.opts = ctx.opts
         self.output_context: list[list[str]] = []
         self.preserve_whitespace = True
+        self.table_header_context = [False]
         self.title = title
         self.title2target = ctx.title2target
         self.userid2name = ctx.userid2name
@@ -1068,12 +1069,16 @@ class Translator:
             self.append('<table>')
             self.newline()
 
+        self.table_header_context.append(False)
+
     def depart_table(self, node: Tag) -> None:
         if self.is_html_mode():
             self.append('</table>')
 
         self.html_mode_context.pop()
         self.newline(count=2)
+
+        self.table_header_context.pop()
 
     def visit_tbody(self, node: Tag) -> None:
         if self.is_html_mode():
@@ -1116,11 +1121,6 @@ class Translator:
 
             self.append(f'{td_contents} ')
 
-            # if this is the last td, close up the row
-            next_tag = node.find_next_sibling()
-            if not next_tag or next_tag.name != 'td':
-                self.append('|\n')
-
     def visit_th(self, node: Tag) -> None:
         if self.is_html_mode():
             self.append('<th>')
@@ -1141,21 +1141,6 @@ class Translator:
             self.output = self.output_context.pop()
 
             self.append(f'{th_contents} ')
-
-            # if this is the last th, close up the row
-            next_tag = node.find_next_sibling()
-            if not next_tag or next_tag.name != 'th':
-                self.append('|\n')
-
-                # generate a line separating from the table's body after the
-                # last th instance; while this would typically be done under
-                # thead processing, some older Confluence versions may have
-                # generated tables with no thead tags and have a leading th
-                # in first row and td in others
-                assert node.parent
-                column_count = len(node.parent.find_all('th'))
-                if column_count:
-                    self.append('| - ' * column_count + '|\n')
 
     def visit_thead(self, node: Tag) -> None:
         if self.is_html_mode():
@@ -1196,15 +1181,29 @@ class Translator:
             assert node.parent.parent
             thead_node = node.parent.parent.find('thead')
             if not thead_node and not node.find_previous_sibling():
-                column_count = len(node.find_all('td'))
+                column_count = len(node.find_all(['td', 'th'], recursive=False))
                 if column_count:
                     self.append('| ' * column_count + '|\n')
                     self.append('| - ' * column_count + '|\n')
+                    self.table_header_context[-1] = True
 
     def depart_tr(self, node: Tag) -> None:
         if self.is_html_mode():
             self.append('</tr>')
             self.newline()
+        else:
+            # close up the row
+            self.append('|\n')
+
+            # generate a line separating from the table's body; while this
+            # would typically be done under thead processing, some older
+            # Confluence versions may have generated tables with no thead tags
+            # and have a leading th in first row and td in others
+            if not self.table_header_context[-1]:
+                column_count = len(node.find_all(['td', 'th'], recursive=False))
+                if column_count:
+                    self.append('| - ' * column_count + '|\n')
+                    self.table_header_context[-1] = True
 
     def visit_u(self, node: Tag) -> None:
         self.append('<u>')
