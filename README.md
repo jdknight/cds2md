@@ -78,11 +78,11 @@ options:
   --cql-mode            search for pages with cql api over content api
   --debug               enabling debugging logs
   --development         configure to operate in a development state
-  --header, -H HEADER   http headers to include in requests
+  --enable-jira-api-features
+                        enable features that query jira api for content
   --flat                ignore any Confluence-detected hierarchy structure
+  --header, -H HEADER   http headers to include in requests
   --ignore-cache        ignore any cached content
-  --ignore-jira-api-features
-                        ignore attempts to query jira api for content
   --ignore-tls          ignore all TLS checks when communicating with Confluence
   --jira-url JIRA_URL   base url to use for any jira links
   --output OUTPUT       path to output markdown content into
@@ -90,6 +90,9 @@ options:
   --timeout TIMEOUT     timeout for connection REST requests to Confluence
   --tweak-admonition-type {default,docusaurus,github,gitlab,myst,plain}
                         admonition formatting to use (default: default)
+  --tweak-anchor-all    force add all anchor entries
+  --tweak-anchor-type {default,html,myst}
+                        anchor formatting to use (default: default)
   --tweak-html-images   force all images to be generated as html-based images
   --tweak-html-tables   force all tables to be generated as html-based tables
   --version             show program's version number and exit
